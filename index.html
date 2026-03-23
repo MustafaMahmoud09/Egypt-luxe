@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Egypt Luxe – Discover Egypt's Finest Destinations</title>
+  <meta name="description" content="Explore Egypt's most luxurious coastal destinations. Book hotels, chalets, restaurants and activities in Sahel, Sharm El Sheikh, and Hurghada.">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* ---- INDEX-SPECIFIC ---- */
+    .section-bg { background: var(--white); }
+    .section-alt { background: var(--off-white); }
+
+    /* Offers horizontal scroll on mobile */
+    .offers-scroll { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    @media(max-width:900px){ .offers-scroll { grid-template-columns: 1fr; } }
+
+    /* Stats Banner */
+    .stats-banner {
+      background: linear-gradient(135deg, #0D0D0D 0%, #1A1A1A 100%);
+      padding: 4rem 0;
+    }
+    .stats-banner .stat-value { color: var(--gold-light); }
+    .stats-banner .stat-label { color: rgba(255,255,255,0.6); }
+    .stats-banner .stat-card { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.08); }
+
+    /* Village Section */
+    .villages-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    @media(max-width:900px){ .villages-grid { grid-template-columns: 1fr 1fr; } }
+    @media(max-width:580px){ .villages-grid { grid-template-columns: 1fr; } }
+
+    /* Most Visited */
+    .most-visited-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
+    @media(max-width:1024px){ .most-visited-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media(max-width:580px){ .most-visited-grid { grid-template-columns: 1fr; } }
+
+    /* Search Tags */
+    .search-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; margin-top: 1.25rem; }
+    .search-tag {
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: white;
+      padding: 0.35rem 1rem;
+      border-radius: 50px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: var(--transition);
+      font-weight: 500;
+    }
+    .search-tag:hover { background: rgba(255,255,255,0.25); }
+
+    /* Experience card */
+    .exp-card {
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .exp-card:hover { transform: translateY(-4px); }
+    .exp-card img { width: 100%; height: 200px; object-fit: cover; transition: var(--transition-slow); }
+    .exp-card:hover img { transform: scale(1.05); }
+    .exp-card-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 60%);
+    }
+    .exp-card-content { position: absolute; bottom: 0; left: 0; right: 0; padding: 1.25rem; color: white; }
+    .exp-card-title { font-family: var(--font-display); font-size: 1rem; font-weight: 600; margin-bottom: 0.2rem; }
+    .exp-card-meta { font-size: 0.78rem; color: rgba(255,255,255,0.8); }
+
+    /* Testimonials */
+    .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    @media(max-width:900px){ .testimonials-grid { grid-template-columns: 1fr; } }
+
+    .testimonial-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      border: 1px solid var(--border-light);
+      box-shadow: var(--shadow-sm);
+    }
+    .testimonial-quote { font-size: 2rem; color: var(--gold-light); line-height: 1; margin-bottom: 0.75rem; font-family: Georgia, serif; }
+    .testimonial-text { font-size: 0.9rem; color: var(--text-muted); line-height: 1.8; margin-bottom: 1.25rem; font-style: italic; }
+    .testimonial-author { display: flex; align-items: center; gap: 0.75rem; }
+    .testimonial-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold-light), var(--gold));
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; color: white; font-size: 0.85rem; flex-shrink: 0;
+    }
+    .testimonial-name { font-weight: 600; font-size: 0.875rem; }
+    .testimonial-role { font-size: 0.78rem; color: var(--text-muted); }
+  </style>
+</head>
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar transparent" id="navbar">
+  <a href="index.html" class="nav-logo">
+    <div class="logo-icon">🌊</div>
+    Egypt<span>Luxe</span>
+  </a>
+
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="villages.html" class="nav-link">Destinations</a>
+    <a href="#offers" class="nav-link">Offers</a>
+    <div class="nav-auth flex" id="nav-auth" style="display:flex!important;gap:0.5rem">
+      <a href="login.html" class="nav-btn outline nav-link">Login</a>
+      <a href="register.html" class="nav-btn gold">Register</a>
+    </div>
+    <div class="nav-user-area hidden flex" id="nav-user-area" style="gap:0.75rem;align-items:center">
+      <a href="profile.html" class="nav-link">Profile</a>
+      <div class="nav-avatar" onclick="window.location.href='profile.html'">U</div>
+      <button class="nav-btn outline nav-link logout-btn">Logout</button>
+    </div>
+  </div>
+
+  <button class="hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Mobile Nav -->
+<div class="mobile-overlay" id="mobile-overlay"></div>
+<nav class="mobile-nav" id="mobile-nav">
+  <div class="mobile-nav-header">
+    <div class="nav-logo" style="color:var(--charcoal)">🌊 Egypt<span>Luxe</span></div>
+    <div class="mobile-nav-close" id="mobile-nav-close">✕</div>
+  </div>
+  <a href="index.html">🏠 Home</a>
+  <a href="villages.html">🗺 Destinations</a>
+  <a href="#offers">🎁 Offers</a>
+  <a href="login.html" class="mobile-auth-link">🔑 Login</a>
+  <a href="register.html" class="mobile-auth-link">✨ Register</a>
+  <a href="profile.html" class="mobile-user-link hidden">👤 My Profile</a>
+  <a href="#" class="mobile-user-link hidden logout-btn">🚪 Logout</a>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="hero-bg">
+    <img src="https://images.unsplash.com/photo-1539650116574-75c0c6d73f6e?w=1920&q=85" alt="Egypt Coast" loading="eager" referrerpolicy="no-referrer" crossorigin="anonymous" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(160deg,#1a1208 0%,#2d1f0a 50%,#0d0d0d 100%)'">
+    <div class="hero-overlay"></div>
+  </div>
+
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-eyebrow animate-up">
+        ✦ Egypt's Premier Tourism Platform
+      </div>
+      <h1 class="hero-title animate-up delay-1">
+        Discover Egypt's<br><em>Coastal Paradise</em>
+      </h1>
+      <p class="hero-subtitle animate-up delay-2">
+        From the shimmering Mediterranean shores of Sahel to the vibrant coral reefs of Sharm and Hurghada — your extraordinary Egyptian escape begins here.
+      </p>
+      <div class="hero-cta animate-up delay-3">
+        <a href="villages.html" class="btn btn-primary btn-xl">
+          Explore Destinations ↗
+        </a>
+        <a href="#how-it-works" class="btn btn-white btn-lg">How It Works</a>
+      </div>
+      <div class="hero-stats animate-up delay-4">
+        <div class="hero-stat">
+          <div class="hero-stat-value">3</div>
+          <div class="hero-stat-label">Premium Destinations</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-value">500+</div>
+          <div class="hero-stat-label">Curated Services</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-value">50k+</div>
+          <div class="hero-stat-label">Happy Travelers</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-indicator">
+    <div class="scroll-mouse"></div>
+    <span>SCROLL</span>
+  </div>
+
+  <!-- Hero Search -->
+  <div class="hero-search-wrapper">
+    <div class="hero-search-container">
+      <div class="hero-search" id="hero-search">
+        <div class="hero-search-field">
+          <span class="hero-search-label">Destination</span>
+          <input class="hero-search-input" id="search-destination" placeholder="Sahel, Sharm, Hurghada...">
+        </div>
+        <div class="hero-search-divider"></div>
+        <div class="hero-search-field">
+          <span class="hero-search-label">Category</span>
+          <select class="hero-search-input form-select" id="search-category">
+            <option value="">All Services</option>
+            <option value="hotels">Hotels</option>
+            <option value="chalets">Chalets</option>
+            <option value="apartments">Apartments</option>
+            <option value="restaurants">Restaurants</option>
+            <option value="cafes">Cafes</option>
+            <option value="activities">Activities</option>
+          </select>
+        </div>
+        <div class="hero-search-divider"></div>
+        <div class="hero-search-field">
+          <span class="hero-search-label">Guests</span>
+          <select class="hero-search-input form-select" id="search-guests">
+            <option value="1">1 Guest</option>
+            <option value="2" selected>2 Guests</option>
+            <option value="3">3 Guests</option>
+            <option value="4">4+ Guests</option>
+          </select>
+        </div>
+        <button class="hero-search-btn" id="hero-search-btn">
+          🔍 Search
+        </button>
+      </div>
+      <div class="search-tags">
+        <span class="search-tag" onclick="quickSearch('beach')">🏖 Beach</span>
+        <span class="search-tag" onclick="quickSearch('diving')">🤿 Diving</span>
+        <span class="search-tag" onclick="quickSearch('luxury')">✨ Luxury</span>
+        <span class="search-tag" onclick="quickSearch('yacht')">⛵ Yacht</span>
+        <span class="search-tag" onclick="quickSearch('desert')">🏜 Desert Safari</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Spacer for hero search overlap -->
+<div style="height: 120px; background: var(--off-white)"></div>
+
+<!-- ===== FEATURED VILLAGES ===== -->
+<section class="section-alt" id="destinations">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">Destinations</div>
+      <h2 class="section-title">Egypt's Finest Coastal Gems</h2>
+      <p class="section-subtitle">Three extraordinary destinations, each with a unique character and unparalleled beauty. Where will you go first?</p>
+    </div>
+    <div class="villages-grid" id="villages-grid"></div>
+    <div style="text-align:center;margin-top:2.5rem">
+      <a href="villages.html" class="btn btn-primary btn-lg" style="display:inline-flex;align-items:center;gap:0.5rem">
+        🗺 View All Destinations &nbsp;→
+      </a>
+      <p style="margin-top:0.75rem;font-size:0.82rem;color:var(--text-muted)">Browse Sahel, Sharm El Sheikh &amp; Hurghada</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== STATS BANNER ===== -->
+<div class="stats-banner">
+  <div class="container">
+    <div class="grid-4">
+      <div class="stat-card"><div class="stat-value">50,000+</div><div class="stat-label">Satisfied Travelers</div></div>
+      <div class="stat-card"><div class="stat-value">500+</div><div class="stat-label">Premium Services</div></div>
+      <div class="stat-card"><div class="stat-value">4.8★</div><div class="stat-label">Average Rating</div></div>
+      <div class="stat-card"><div class="stat-value">24/7</div><div class="stat-label">Guest Support</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== LATEST PLACES ===== -->
+<section class="section-bg" id="latest">
+  <div class="container">
+    <div class="flex-between mb-4" style="flex-wrap:wrap;gap:1rem">
+      <div>
+        <div class="section-eyebrow" style="justify-content:flex-start">Latest Places</div>
+        <h2 class="section-title" style="text-align:left;font-size:1.8rem">Newly Added Listings</h2>
+      </div>
+      <a href="services.html" class="btn btn-outline">View All →</a>
+    </div>
+    <div class="grid-3" id="latest-grid"></div>
+    <div class="flow-cta-section">
+      <h3>Ready to Explore Services?</h3>
+      <p>Browse our full catalogue — hotels, chalets, restaurants, activities &amp; more across all destinations</p>
+      <div class="btn-group">
+        <a href="services.html" class="btn btn-primary btn-lg">🔍 Explore All Services</a>
+        <a href="services.html?category=activities" class="btn btn-outline btn-lg">🎯 Activities</a>
+        <a href="services.html?category=restaurants" class="btn btn-outline btn-lg">🍽 Restaurants</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== BEST OFFERS ===== -->
+<section class="section-alt" id="offers">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">Limited Time</div>
+      <h2 class="section-title">Best Offers & Deals</h2>
+      <p class="section-subtitle">Exclusive offers curated for luxury travelers. Book today and save on your dream Egyptian escape.</p>
+    </div>
+    <div class="offers-scroll" id="offers-grid"></div>
+  </div>
+</section>
+
+<!-- ===== MOST VISITED ===== -->
+<section class="section-bg" id="most-visited">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">Trending</div>
+      <h2 class="section-title">Most Visited Experiences</h2>
+      <p class="section-subtitle">The top-rated experiences our guests keep coming back for, time and again.</p>
+    </div>
+    <div class="most-visited-grid" id="most-visited-grid"></div>
+  </div>
+</section>
+
+<!-- ===== HOW IT WORKS ===== -->
+<section class="section-alt" id="how-it-works">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">Simple Process</div>
+      <h2 class="section-title">How Egypt Luxe Works</h2>
+    </div>
+    <div class="grid-4">
+      <div style="text-align:center;padding:2rem 1rem">
+        <div style="width:64px;height:64px;background:linear-gradient(135deg,var(--gold-pale),var(--gold-light));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin:0 auto 1.25rem">🔍</div>
+        <div style="width:28px;height:28px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:0.8rem;font-weight:700;margin:0 auto 0.75rem">1</div>
+        <h4 style="margin-bottom:0.5rem">Discover</h4>
+        <p style="font-size:0.875rem;color:var(--text-muted)">Browse Egypt's finest destinations and find the perfect service for your needs.</p>
+      </div>
+      <div style="text-align:center;padding:2rem 1rem">
+        <div style="width:64px;height:64px;background:linear-gradient(135deg,var(--gold-pale),var(--gold-light));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin:0 auto 1.25rem">📅</div>
+        <div style="width:28px;height:28px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:0.8rem;font-weight:700;margin:0 auto 0.75rem">2</div>
+        <h4 style="margin-bottom:0.5rem">Book</h4>
+        <p style="font-size:0.875rem;color:var(--text-muted)">Select your dates, guests, and preferences. Simple, transparent booking.</p>
+      </div>
+      <div style="text-align:center;padding:2rem 1rem">
+        <div style="width:64px;height:64px;background:linear-gradient(135deg,var(--gold-pale),var(--gold-light));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin:0 auto 1.25rem">💳</div>
+        <div style="width:28px;height:28px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:0.8rem;font-weight:700;margin:0 auto 0.75rem">3</div>
+        <h4 style="margin-bottom:0.5rem">Pay</h4>
+        <p style="font-size:0.875rem;color:var(--text-muted)">Choose between cash or online payment. Secure and hassle-free.</p>
+      </div>
+      <div style="text-align:center;padding:2rem 1rem">
+        <div style="width:64px;height:64px;background:linear-gradient(135deg,var(--gold-pale),var(--gold-light));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin:0 auto 1.25rem">🌟</div>
+        <div style="width:28px;height:28px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:0.8rem;font-weight:700;margin:0 auto 0.75rem">4</div>
+        <h4 style="margin-bottom:0.5rem">Enjoy</h4>
+        <p style="font-size:0.875rem;color:var(--text-muted)">Arrive and enjoy a seamless, unforgettable luxury experience.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TESTIMONIALS ===== -->
+<section class="section-bg">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">Guest Stories</div>
+      <h2 class="section-title">What Our Guests Say</h2>
+    </div>
+    <div class="testimonials-grid" id="testimonials-grid"></div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo">🌊 Egypt<span style="color:var(--gold)">Luxe</span></div>
+        <p class="footer-desc">Egypt's premier smart tourism platform, connecting discerning travelers with the finest coastal destinations, hotels, and experiences across Egypt's Mediterranean and Red Sea coasts.</p>
+        <div class="footer-social">
+          <a href="#" class="footer-social-btn">f</a>
+          <a href="#" class="footer-social-btn">in</a>
+          <a href="#" class="footer-social-btn">𝕏</a>
+          <a href="#" class="footer-social-btn">▶</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-heading">Destinations</div>
+        <div class="footer-links">
+          <a href="village-details.html?village=sahel" class="footer-link">Sahel – North Coast</a>
+          <a href="village-details.html?village=sharm" class="footer-link">Sharm El Sheikh</a>
+          <a href="village-details.html?village=hurghada" class="footer-link">Hurghada</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-heading">Services</div>
+        <div class="footer-links">
+          <a href="#" class="footer-link">Hotels & Resorts</a>
+          <a href="#" class="footer-link">Chalets</a>
+          <a href="#" class="footer-link">Apartments</a>
+          <a href="#" class="footer-link">Restaurants</a>
+          <a href="#" class="footer-link">Activities</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-heading">Company</div>
+        <div class="footer-links">
+          <a href="#" class="footer-link">About Us</a>
+          <a href="#" class="footer-link">Contact</a>
+          <a href="#" class="footer-link">Privacy Policy</a>
+          <a href="#" class="footer-link">Terms of Service</a>
+          <a href="profile.html" class="footer-link">My Account</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 EgyptLuxe. All rights reserved.</span>
+      <span>Crafted with ♥ for Egypt's finest destinations</span>
+    </div>
+  </div>
+</footer>
+
+<div id="toast-container"></div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Villages Grid
+  const villagesGrid = document.getElementById('villages-grid');
+  if (villagesGrid) {
+    villagesGrid.innerHTML = AppData.villages.map(v => renderVillageCard(v)).join('');
+  }
+
+  // Latest Places - Featured services
+  const latestGrid = document.getElementById('latest-grid');
+  if (latestGrid) {
+    const services = AppData.getFeaturedServices(6);
+    latestGrid.innerHTML = services.map(s => renderServiceCard(s)).join('');
+  }
+
+  // Best Offers
+  const offersGrid = document.getElementById('offers-grid');
+  if (offersGrid) {
+    offersGrid.innerHTML = AppData.offers.map(offer => `
+      <div class="offer-card">
+        <img class="offer-card-image" src="${AppData.getServiceById(offer.serviceId)?.image || ''}" alt="${offer.title}" loading="lazy">
+        <div class="offer-card-body">
+          <span class="offer-discount">${offer.discount}</span>
+          <h3 style="font-family:var(--font-display);font-size:1.15rem;margin-bottom:0.25rem">${offer.title}</h3>
+          <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:0.75rem">${offer.description}</p>
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem">
+            <div>
+              <span style="font-size:0.75rem;color:var(--text-muted)">Code: </span>
+              <span style="font-weight:700;color:var(--gold-dark);font-size:0.85rem;background:var(--gold-pale);padding:0.2rem 0.6rem;border-radius:4px">${offer.code}</span>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="openService('${offer.serviceId}')">Claim →</button>
+          </div>
+          <div style="font-size:0.75rem;color:var(--text-light);margin-top:0.5rem">Expires: ${offer.expiry}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Most Visited
+  const mvGrid = document.getElementById('most-visited-grid');
+  if (mvGrid) {
+    const services = AppData.getFeaturedServices(8).slice(2, 8);
+    mvGrid.innerHTML = services.map(s => `
+      <div class="exp-card" onclick="openService('${s.id}')">
+        <img src="${s.image}" alt="${s.name}" loading="lazy">
+        <div class="exp-card-overlay"></div>
+        <div class="exp-card-content">
+          <div class="exp-card-title">${s.name}</div>
+          <div class="exp-card-meta">⭐ ${s.rating} · ${s.tags?.[0] || s.category}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Testimonials
+  const testGrid = document.getElementById('testimonials-grid');
+  if (testGrid) {
+    testGrid.innerHTML = AppData.reviews.slice(0,3).map(r => `
+      <div class="testimonial-card">
+        <div class="testimonial-quote">"</div>
+        <p class="testimonial-text">${r.text}</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">${r.name[0]}</div>
+          <div>
+            <div class="testimonial-name">${r.name}</div>
+            <div class="testimonial-role">Verified Guest · ${r.date}</div>
+          </div>
+          <div style="margin-left:auto;color:var(--gold);font-size:0.8rem">★★★★★</div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Hero search
+  document.getElementById('hero-search-btn')?.addEventListener('click', () => {
+    const destination = document.getElementById('search-destination').value.trim();
+    const category = document.getElementById('search-category').value;
+    if (destination) {
+      const villageMap = { sahel: 'sahel', 'north coast': 'sahel', sharm: 'sharm', hurghada: 'hurghada' };
+      const key = Object.keys(villageMap).find(k => destination.toLowerCase().includes(k));
+      if (key) {
+        const url = category ? `services.html?village=${villageMap[key]}&category=${category}` : `village-details.html?village=${villageMap[key]}`;
+        window.location.href = url;
+        return;
+      }
+    }
+    window.location.href = category ? `services.html?category=${category}` : 'villages.html';
+  });
+
+  // Update auth state for nav
+  const user = Auth.getUser();
+  if (user) {
+    document.getElementById('nav-auth')?.classList.add('hidden');
+    const userArea = document.getElementById('nav-user-area');
+    if (userArea) {
+      userArea.classList.remove('hidden');
+      userArea.style.display = 'flex';
+      const avatar = userArea.querySelector('.nav-avatar');
+      if (avatar) avatar.textContent = user.name?.[0]?.toUpperCase() || 'U';
+    }
+  }
+});
+
+function quickSearch(term) {
+  window.location.href = `villages.html?q=${encodeURIComponent(term)}`;
+}
+</script>
+</body>
+</html>

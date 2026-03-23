@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment – Egypt Luxe</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    body { background: var(--off-white); }
+
+    .payment-hero {
+      background: linear-gradient(135deg, #0D0D0D 0%, #1A1208 100%);
+      padding: 6rem 0 3rem; text-align: center;
+    }
+    .payment-hero h1 { font-family: var(--font-display); font-size: clamp(1.6rem,3vw,2.2rem); color: white; }
+    .payment-hero h1 span { color: var(--gold); }
+    .payment-hero p { color: rgba(255,255,255,0.6); font-size: 0.9rem; margin-top: 0.5rem; }
+
+    .steps { display: flex; align-items: center; justify-content: center; gap: 0; margin-top: 2rem; flex-wrap: wrap; }
+    .step-item { display: flex; align-items: center; gap: 0.5rem; }
+    .step-circle { width: 34px; height: 34px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.25); color: rgba(255,255,255,0.45); display: flex; align-items: center; justify-content: center; font-size: 0.82rem; font-weight: 600; font-family: var(--font-body); }
+    .step-item.active .step-circle { border-color: var(--gold); color: var(--gold); }
+    .step-item.done .step-circle { background: var(--gold); border-color: var(--gold); color: white; }
+    .step-name { font-size: 0.8rem; color: rgba(255,255,255,0.45); font-family: var(--font-body); }
+    .step-item.active .step-name { color: white; }
+    .step-item.done .step-name { color: var(--gold-light); }
+    .step-line { width: 50px; height: 2px; background: rgba(255,255,255,0.12); margin: 0 0.25rem; }
+    .step-line.done { background: var(--gold); }
+
+    .pay-layout {
+      display: grid; grid-template-columns: 1fr 360px;
+      gap: 2rem; padding: 3rem 0 5rem; align-items: start;
+    }
+    @media(max-width:900px){ .pay-layout { grid-template-columns: 1fr; } }
+
+    .pay-section {
+      background: var(--white); border-radius: var(--radius-lg);
+      padding: 2rem; border: 1px solid var(--border-light);
+      box-shadow: var(--shadow-sm); margin-bottom: 1.25rem;
+    }
+    .pay-section-title {
+      font-family: var(--font-display); font-size: 1.1rem; font-weight: 600;
+      color: var(--charcoal); margin-bottom: 1.5rem;
+      padding-bottom: 1rem; border-bottom: 1px solid var(--border-light);
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    .step-dot { width: 26px; height: 26px; border-radius: 50%; background: linear-gradient(135deg, var(--gold), var(--gold-dark)); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 700; flex-shrink: 0; }
+
+    .method-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 0.875rem; }
+    @media(max-width:460px){ .method-grid { grid-template-columns: 1fr; } }
+
+    .pay-method {
+      border: 2px solid var(--border); border-radius: var(--radius-md);
+      padding: 1.25rem 1rem; text-align: center; cursor: pointer;
+      transition: var(--transition); background: var(--off-white); position: relative;
+    }
+    .pay-method:hover { border-color: var(--gold-light); background: var(--gold-pale); }
+    .pay-method.selected { border-color: var(--gold); background: var(--gold-pale); }
+    .pay-method.selected::after {
+      content: '✓'; position: absolute; top: -9px; right: -9px;
+      width: 20px; height: 20px; border-radius: 50%;
+      background: var(--gold); color: white;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem; font-weight: 700;
+    }
+    .method-icon { font-size: 1.75rem; margin-bottom: 0.5rem; }
+    .method-name { font-weight: 600; font-size: 0.875rem; color: var(--charcoal); }
+    .method-desc { font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem; }
+
+    .method-details { margin-top: 1.5rem; }
+
+    .cash-box {
+      display: flex; gap: 1rem; align-items: flex-start;
+      background: var(--gold-pale); border-radius: var(--radius-md);
+      padding: 1.25rem; border: 1px solid var(--gold-light);
+    }
+    .cash-box-icon { font-size: 2rem; flex-shrink: 0; }
+    .cash-box h4 { font-family: var(--font-display); font-size: 0.95rem; color: var(--charcoal); margin-bottom: 0.4rem; }
+    .cash-box p { font-size: 0.82rem; color: var(--text-muted); line-height: 1.65; }
+
+    .card-form { display: none; }
+    .card-form.show { display: block; }
+
+    .form-group { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1rem; }
+    .form-group:last-child { margin-bottom: 0; }
+    .form-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); }
+    .form-input {
+      width: 100%; padding: 0.8rem 1rem;
+      border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+      font-size: 0.9rem; font-family: var(--font-body);
+      color: var(--text); background: var(--white); outline: none;
+      transition: var(--transition); box-sizing: border-box;
+    }
+    .form-input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,169,110,0.1); }
+    .input-with-icon { position: relative; }
+    .input-with-icon input { padding-left: 2.5rem; }
+    .input-icon { position: absolute; left: 0.85rem; top: 50%; transform: translateY(-50%); font-size: 1rem; }
+    .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media(max-width:480px){ .form-grid-2 { grid-template-columns: 1fr; } }
+    .card-brands { display: flex; gap: 0.5rem; margin-top: 0.5rem; }
+    .card-brand { padding: 0.2rem 0.6rem; border: 1px solid var(--border); border-radius: 4px; font-size: 0.7rem; color: var(--text-muted); background: var(--off-white); font-weight: 600; }
+
+    .instapay-box {
+      background: #EFF6FF; border-radius: var(--radius-md);
+      padding: 1.5rem; border: 1px solid #BFDBFE; text-align: center;
+    }
+    .instapay-logo { font-family: var(--font-display); font-size: 1.4rem; color: #1D4ED8; font-weight: 700; margin-bottom: 0.75rem; }
+    .instapay-box p { font-size: 0.85rem; color: #1E40AF; margin-bottom: 1rem; }
+    .btn-instapay {
+      display: inline-block; padding: 0.75rem 1.75rem;
+      background: #1D4ED8; color: white; border: none;
+      border-radius: var(--radius-sm); font-family: var(--font-body);
+      font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: var(--transition);
+    }
+    .btn-instapay:hover { background: #1E40AF; }
+
+    /* ORDER SUMMARY */
+    .order-card {
+      background: var(--white); border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg); border: 1px solid var(--border-light);
+      padding: 1.75rem; position: sticky; top: 90px;
+    }
+    @media(max-width:900px){ .order-card { position: static; } }
+    .order-title { font-family: var(--font-display); font-size: 1rem; font-weight: 600; color: var(--charcoal); margin-bottom: 1.25rem; }
+    .order-svc { display: flex; gap: 0.875rem; margin-bottom: 1.25rem; align-items: flex-start; }
+    .order-svc img { width: 72px; height: 64px; border-radius: var(--radius-sm); object-fit: cover; flex-shrink: 0; }
+    .order-svc-cat { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--gold); }
+    .order-svc-name { font-family: var(--font-display); font-size: 0.92rem; font-weight: 600; color: var(--charcoal); }
+    .order-svc-loc { font-size: 0.78rem; color: var(--text-muted); }
+
+    .order-details {
+      background: var(--off-white); border-radius: var(--radius-sm);
+      padding: 1rem; margin-bottom: 1.25rem; border: 1px solid var(--border-light);
+    }
+    .order-detail { display: flex; justify-content: space-between; font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+    .order-detail:last-child { margin-bottom: 0; }
+    .order-detail strong { color: var(--charcoal); font-weight: 600; }
+
+    .pay-btn {
+      width: 100%; padding: 1rem;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: white; border: none; border-radius: var(--radius-md);
+      font-family: var(--font-display); font-size: 1rem; font-weight: 600;
+      cursor: pointer; transition: var(--transition); letter-spacing: 0.03em;
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+    }
+    .pay-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(201,169,110,0.4); }
+    .pay-btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+    .ssl-note { text-align: center; margin-top: 0.6rem; font-size: 0.72rem; color: var(--text-light); }
+    .back-link { display: block; text-align: center; margin-top: 0.6rem; font-size: 0.8rem; color: var(--gold); cursor: pointer; }
+
+    /* CONFIRMATION */
+    #confirmScreen {
+      display: none;
+      max-width: 620px; margin: 4rem auto; padding: 0 1.5rem 5rem;
+      text-align: center;
+    }
+    .confirm-icon {
+      width: 96px; height: 96px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.8rem; margin: 0 auto 1.75rem;
+      box-shadow: 0 8px 40px rgba(201,169,110,0.35);
+      animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    @keyframes popIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .confirm-title { font-family: var(--font-display); font-size: clamp(1.8rem,4vw,2.4rem); color: var(--charcoal); margin-bottom: 0.75rem; }
+    .confirm-sub { font-size: 0.9rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 2rem; }
+    .confirm-card {
+      background: var(--white); border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-md); padding: 2rem;
+      border: 1px solid var(--border-light); margin-bottom: 2rem; text-align: left;
+    }
+    .confirm-ref-lbl { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-light); margin-bottom: 0.25rem; }
+    .confirm-ref { font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; color: var(--gold); margin-bottom: 1.5rem; }
+    .confirm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media(max-width:480px){ .confirm-grid { grid-template-columns: 1fr; } }
+    .confirm-field { background: var(--off-white); border-radius: var(--radius-sm); padding: 0.875rem 1rem; border: 1px solid var(--border-light); }
+    .confirm-field-lbl { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-light); margin-bottom: 0.3rem; }
+    .confirm-field-val { font-size: 0.875rem; font-weight: 600; color: var(--charcoal); }
+    .confirm-actions { display: flex; gap: 0.875rem; justify-content: center; flex-wrap: wrap; }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar solid dark-text">
+  <a href="index.html" class="nav-logo"><div class="logo-icon">🌊</div>Egypt<span>Luxe</span></a>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">Home</a>
+    <div class="nav-user-area hidden flex" id="nav-user-area" style="gap:0.75rem;align-items:center">
+      <div class="nav-avatar" onclick="location.href='profile.html'">U</div>
+      <button class="nav-btn outline nav-link logout-btn">Logout</button>
+    </div>
+  </div>
+  <button class="hamburger" style="color:var(--charcoal)"><span></span><span></span><span></span></button>
+</nav>
+<div class="mobile-overlay"></div>
+<nav class="mobile-nav">
+  <div class="mobile-nav-header">
+    <div class="nav-logo" style="color:var(--charcoal)">🌊 Egypt<span>Luxe</span></div>
+    <div class="mobile-nav-close">✕</div>
+  </div>
+  <a href="index.html">🏠 Home</a>
+  <a href="#" class="mobile-user-link logout-btn">🚪 Logout</a>
+</nav>
+
+<!-- HERO -->
+<div class="payment-hero" id="payHero">
+  <h1>Secure <span>Payment</span></h1>
+  <p>Choose your preferred payment method to complete the booking</p>
+  <div class="steps">
+    <div class="step-item done"><div class="step-circle">✓</div><span class="step-name">Details</span></div>
+    <div class="step-line done"></div>
+    <div class="step-item active"><div class="step-circle">2</div><span class="step-name">Payment</span></div>
+    <div class="step-line"></div>
+    <div class="step-item"><div class="step-circle">3</div><span class="step-name">Confirmed</span></div>
+  </div>
+</div>
+
+<!-- LAYOUT -->
+<div class="container" id="payLayout">
+  <div class="pay-layout">
+
+    <!-- PAYMENT FORM -->
+    <div>
+      <div class="pay-section">
+        <h2 class="pay-section-title"><span class="step-dot">1</span> Payment Method</h2>
+        <div class="method-grid">
+          <div class="pay-method selected" data-method="cash">
+            <div class="method-icon">💵</div>
+            <div class="method-name">Cash</div>
+            <div class="method-desc">Pay on arrival</div>
+          </div>
+          <div class="pay-method" data-method="card">
+            <div class="method-icon">💳</div>
+            <div class="method-name">Credit Card</div>
+            <div class="method-desc">Visa / Mastercard</div>
+          </div>
+          <div class="pay-method" data-method="instapay">
+            <div class="method-icon">📱</div>
+            <div class="method-name">InstaPay</div>
+            <div class="method-desc">Instant transfer</div>
+          </div>
+        </div>
+
+        <div class="method-details">
+          <!-- Cash -->
+          <div id="cashDetails">
+            <div class="cash-box">
+              <div class="cash-box-icon">🏨</div>
+              <div>
+                <h4>Pay on Arrival</h4>
+                <p>Your booking is reserved immediately. Simply show your booking reference at the property and pay in full upon arrival. We accept EGP and USD.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card -->
+          <div class="card-form" id="cardDetails">
+            <div class="form-group">
+              <label class="form-label">Cardholder Name</label>
+              <div class="input-with-icon">
+                <span class="input-icon">👤</span>
+                <input class="form-input" type="text" id="cardName" placeholder="Name as on card">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Card Number</label>
+              <div class="input-with-icon">
+                <span class="input-icon">💳</span>
+                <input class="form-input" type="text" id="cardNum" placeholder="1234 5678 9012 3456" maxlength="19">
+              </div>
+              <div class="card-brands">
+                <span class="card-brand">VISA</span>
+                <span class="card-brand">Mastercard</span>
+                <span class="card-brand">Mada</span>
+              </div>
+            </div>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label">Expiry</label>
+                <input class="form-input" type="text" id="cardExp" placeholder="MM / YY" maxlength="7">
+              </div>
+              <div class="form-group">
+                <label class="form-label">CVV</label>
+                <input class="form-input" type="text" id="cardCVV" placeholder="•••" maxlength="4">
+              </div>
+            </div>
+          </div>
+
+          <!-- InstaPay -->
+          <div id="instapayDetails" style="display:none">
+            <div class="instapay-box">
+              <div class="instapay-logo">InstaPay 🇪🇬</div>
+              <p>You'll be redirected to InstaPay to complete your secure payment. Booking confirmed once payment is received.</p>
+              <button class="btn-instapay" onclick="Toast.show('Redirecting to InstaPay…','success')">Open InstaPay →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ORDER SUMMARY -->
+    <aside>
+      <div class="order-card">
+        <div class="order-title">Order Summary</div>
+        <div class="order-svc">
+          <img id="ordImg" src="" alt="">
+          <div>
+            <div class="order-svc-cat" id="ordCat"></div>
+            <div class="order-svc-name" id="ordName">Loading…</div>
+            <div class="order-svc-loc" id="ordLoc">📍 Egypt</div>
+          </div>
+        </div>
+        <div class="order-details">
+          <div class="order-detail"><span>Check-in</span><strong id="ordIn">–</strong></div>
+          <div class="order-detail"><span>Check-out</span><strong id="ordOut">–</strong></div>
+          <div class="order-detail"><span>Guests</span><strong id="ordGuests">–</strong></div>
+          <div class="order-detail"><span>Nights</span><strong id="ordNights">–</strong></div>
+        </div>
+        <div class="booking-summary">
+          <div class="summary-row"><span class="summary-label" id="ordNightsLbl">–</span><span class="summary-value" id="ordSub">–</span></div>
+          <div class="summary-row"><span class="summary-label">Service fee</span><span class="summary-value" id="ordFee">–</span></div>
+          <div class="summary-row"><span class="summary-label">Taxes (14%)</span><span class="summary-value" id="ordTax">–</span></div>
+          <div class="summary-row summary-total"><span class="summary-label">Total</span><span class="summary-value" id="ordTotal">–</span></div>
+        </div>
+        <button class="pay-btn" id="payBtn">🔒 <span id="payBtnTxt">Confirm & Pay</span></button>
+        <div class="ssl-note">🔐 256-bit SSL · PCI DSS Compliant</div>
+        <a class="back-link" onclick="history.back()">← Back to details</a>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- CONFIRMATION SCREEN -->
+<div id="confirmScreen">
+  <div class="confirm-icon">🎉</div>
+  <h1 class="confirm-title">Booking Confirmed!</h1>
+  <p class="confirm-sub">Your stay has been successfully booked.<br>A confirmation has been sent to <strong id="confirmEmail"></strong></p>
+  <div class="confirm-card">
+    <div class="confirm-ref-lbl">Booking Reference</div>
+    <div class="confirm-ref" id="confirmRef">#EL-000000</div>
+    <div class="confirm-grid" id="confirmGrid"></div>
+  </div>
+  <div class="confirm-actions">
+    <a href="profile.html" class="btn btn-primary">View My Bookings</a>
+    <a href="villages.html" class="btn btn-outline">Explore More</a>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script>
+(function(){
+  Nav.init();
+  if (!Auth.isLoggedIn()) { location.href='login.html'; return; }
+
+  const pending = JSON.parse(sessionStorage.getItem('egyptluxe_pending_booking')||'{}');
+  if (!pending.serviceId) { location.href='services.html'; return; }
+
+  const svc = AppData.getServiceById(pending.serviceId);
+  if (!svc) { location.href='services.html'; return; }
+  const village = AppData.getVillageById(svc.village);
+
+  function fmtD(d){ return new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); }
+
+  // Populate order
+  document.getElementById('ordImg').src = svc.image;
+  document.getElementById('ordCat').textContent = svc.category.toUpperCase();
+  document.getElementById('ordName').textContent = svc.name;
+  document.getElementById('ordLoc').textContent = '📍 ' + (village ? village.name : '') + ', Egypt';
+  document.getElementById('ordIn').textContent = fmtD(pending.checkIn);
+  document.getElementById('ordOut').textContent = fmtD(pending.checkOut);
+  document.getElementById('ordGuests').textContent = pending.guests + ' guest(s)';
+  document.getElementById('ordNights').textContent = pending.nights + ' night(s)';
+  document.getElementById('ordNightsLbl').textContent = `${formatPrice(pending.pricePerNight)} × ${pending.nights} nights`;
+  document.getElementById('ordSub').textContent = formatPrice(pending.subtotal);
+  document.getElementById('ordFee').textContent = formatPrice(pending.fee);
+  document.getElementById('ordTax').textContent = formatPrice(pending.tax);
+  document.getElementById('ordTotal').textContent = formatPrice(pending.total);
+
+  // Method selection
+  let method = 'cash';
+  document.querySelectorAll('.pay-method').forEach(btn => {
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.pay-method').forEach(b=>b.classList.remove('selected'));
+      this.classList.add('selected');
+      method = this.dataset.method;
+      document.getElementById('cashDetails').style.display = method==='cash' ? '' : 'none';
+      document.getElementById('cardDetails').classList.toggle('show', method==='card');
+      document.getElementById('instapayDetails').style.display = method==='instapay' ? '' : 'none';
+      document.getElementById('payBtnTxt').textContent =
+        method==='cash' ? 'Confirm Booking' : method==='card' ? 'Pay Securely' : 'Pay with InstaPay';
+    });
+  });
+
+  // Card formatting
+  document.getElementById('cardNum').addEventListener('input', function(){
+    let v = this.value.replace(/\D/g,'').slice(0,16);
+    this.value = v.replace(/(.{4})/g,'$1 ').trim();
+  });
+  document.getElementById('cardExp').addEventListener('input', function(){
+    let v = this.value.replace(/\D/g,'').slice(0,4);
+    if (v.length>=2) v = v.slice(0,2) + ' / ' + v.slice(2);
+    this.value = v;
+  });
+  document.getElementById('cardCVV').addEventListener('input', function(){ this.value = this.value.replace(/\D/g,''); });
+
+  // Pay
+  document.getElementById('payBtn').addEventListener('click', function(){
+    if (method==='card'){
+      if (!document.getElementById('cardName').value.trim()) { Toast.show('Enter cardholder name','warning'); return; }
+      if (document.getElementById('cardNum').value.replace(/\s/g,'').length < 16) { Toast.show('Enter valid card number','warning'); return; }
+      if (!document.getElementById('cardExp').value.includes('/')) { Toast.show('Enter expiry date','warning'); return; }
+      if (document.getElementById('cardCVV').value.length < 3) { Toast.show('Enter CVV','warning'); return; }
+    }
+    this.disabled = true;
+    this.innerHTML = '⏳ Processing…';
+    setTimeout(() => {
+      const bkId = 'EL-' + Math.random().toString(36).substr(2,7).toUpperCase();
+      const booking = {
+        id: bkId,
+        serviceId: svc.id, serviceName: svc.name, serviceImage: svc.image,
+        category: svc.category, villageName: village ? village.name : '',
+        checkIn: pending.checkIn, checkOut: pending.checkOut,
+        nights: pending.nights, guests: pending.guests,
+        guestName: pending.guestName, guestEmail: pending.guestEmail,
+        pricePerNight: pending.pricePerNight,
+        subtotal: pending.subtotal, fee: pending.fee, tax: pending.tax, total: pending.total,
+        paymentMethod: method, status: 'confirmed', bookedAt: new Date().toISOString()
+      };
+      Bookings.add(booking);
+      sessionStorage.removeItem('egyptluxe_pending_booking');
+      showConfirm(booking);
+    }, 2000);
+  });
+
+  function showConfirm(bk){
+    document.getElementById('payHero').style.display = 'none';
+    document.getElementById('payLayout').style.display = 'none';
+    const screen = document.getElementById('confirmScreen');
+    screen.style.display = 'block';
+    document.getElementById('confirmEmail').textContent = bk.guestEmail || Auth.getUser().email;
+    document.getElementById('confirmRef').textContent = '#' + bk.id;
+    const fields = [
+      {l:'Property', v: bk.serviceName},
+      {l:'Location', v: bk.villageName + ', Egypt'},
+      {l:'Check-in', v: fmtD(bk.checkIn)},
+      {l:'Check-out', v: fmtD(bk.checkOut)},
+      {l:'Guests', v: bk.guests + ' guest(s)'},
+      {l:'Total', v: formatPrice(bk.total)},
+      {l:'Payment', v: bk.paymentMethod==='cash' ? '💵 Cash on Arrival' : bk.paymentMethod==='card' ? '💳 Credit Card' : '📱 InstaPay'},
+      {l:'Status', v: '✅ Confirmed'},
+    ];
+    document.getElementById('confirmGrid').innerHTML = fields.map(f =>
+      `<div class="confirm-field"><div class="confirm-field-lbl">${f.l}</div><div class="confirm-field-val">${f.v}</div></div>`
+    ).join('');
+    Toast.show('Booking confirmed! 🎉','success');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+})();
+</script>
+</body>
+</html>

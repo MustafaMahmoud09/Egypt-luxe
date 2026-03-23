@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Service Details – Egypt Luxe</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    body { background: var(--off-white); }
+
+    /* GALLERY */
+    .detail-gallery {
+      background: #111;
+      margin-top: 72px;
+    }
+    .gallery-hero {
+      position: relative;
+      height: 500px;
+      overflow: hidden;
+      cursor: zoom-in;
+    }
+    .gallery-hero img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: var(--transition-slow);
+    }
+    .gallery-hero:hover img { transform: scale(1.03); }
+    .gallery-hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 55%);
+    }
+    .gallery-hero-info {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 2.5rem 3rem;
+      display: flex; align-items: flex-end; justify-content: space-between;
+    }
+    .gallery-breadcrumb {
+      display: flex; align-items: center; gap: 0.4rem;
+      font-size: 0.78rem; color: rgba(255,255,255,0.65);
+      margin-bottom: 0.75rem;
+    }
+    .gallery-breadcrumb a { color: var(--gold-light); transition: var(--transition); }
+    .gallery-breadcrumb a:hover { color: var(--gold); }
+    .gallery-breadcrumb span { color: rgba(255,255,255,0.4); }
+    .gallery-service-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 3.5vw, 2.5rem);
+      color: white; font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+    .gallery-service-meta { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+    .gallery-service-meta .tag { background: rgba(255,255,255,0.18); border-color: rgba(255,255,255,0.25); color: white; backdrop-filter: blur(8px); }
+    .gallery-service-meta .rating-pill {
+      display: flex; align-items: center; gap: 0.35rem;
+      background: rgba(255,255,255,0.15); backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: white; padding: 0.3rem 0.85rem; border-radius: 50px;
+      font-size: 0.82rem; font-weight: 600;
+    }
+    .gallery-service-meta .rating-pill .stars { color: var(--gold); }
+    .gallery-service-meta .location-pill {
+      color: rgba(255,255,255,0.85); font-size: 0.82rem;
+    }
+    .gallery-actions { display: flex; gap: 0.75rem; flex-shrink: 0; }
+    .gallery-action {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: rgba(255,255,255,0.15); backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: white; font-size: 1.2rem;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: var(--transition);
+    }
+    .gallery-action:hover { background: rgba(255,255,255,0.28); }
+    .gallery-action.liked { color: #e74c3c; border-color: #e74c3c; }
+
+    .gallery-thumbs {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px;
+      background: #111;
+    }
+    .gallery-thumb-item {
+      height: 90px; overflow: hidden; cursor: pointer; position: relative;
+    }
+    .gallery-thumb-item img { width: 100%; height: 100%; object-fit: cover; transition: var(--transition); }
+    .gallery-thumb-item:hover img { transform: scale(1.08); }
+    .gallery-thumb-item.active::after {
+      content: ''; position: absolute; inset: 0;
+      border: 3px solid var(--gold);
+    }
+    @media(max-width:768px){
+      .gallery-hero { height: 300px; }
+      .gallery-hero-info { padding: 1.5rem; flex-direction: column; align-items: flex-start; gap: 1rem; }
+    }
+
+    /* LAYOUT */
+    .detail-layout {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 2.5rem;
+      padding: 3rem 0 5rem;
+      align-items: start;
+    }
+    @media(max-width:1100px){ .detail-layout { grid-template-columns: 1fr 320px; gap: 2rem; } }
+    @media(max-width:768px){ .detail-layout { grid-template-columns: 1fr; } }
+
+    .detail-section {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      border: 1px solid var(--border-light);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 1.5rem;
+    }
+    .detail-section-title {
+      font-family: var(--font-display);
+      font-size: 1.2rem; font-weight: 600;
+      color: var(--charcoal);
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--cream);
+      display: flex; align-items: center; gap: 0.6rem;
+    }
+    .detail-section-title::before {
+      content: ''; width: 4px; height: 20px;
+      background: linear-gradient(180deg, var(--gold), var(--gold-dark));
+      border-radius: 2px; flex-shrink: 0;
+    }
+
+    .highlights-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem;
+    }
+    .highlight-card {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 1rem; background: var(--off-white);
+      border-radius: var(--radius-md); border: 1px solid var(--border-light);
+    }
+    .highlight-ico { font-size: 1.4rem; flex-shrink: 0; }
+    .highlight-lbl { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-light); }
+    .highlight-val { font-size: 0.875rem; font-weight: 600; color: var(--charcoal); }
+
+    .desc-text {
+      font-size: 0.9rem; color: var(--text-muted); line-height: 1.85;
+    }
+    .desc-text p { margin-bottom: 0.875rem; }
+    .desc-text p:last-child { margin-bottom: 0; }
+
+    .amenities-list {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 0.75rem;
+    }
+    .amenity-chip {
+      display: flex; align-items: center; gap: 0.6rem;
+      padding: 0.75rem 1rem;
+      background: var(--gold-pale); border-radius: var(--radius-sm);
+      border: 1px solid var(--gold-light);
+      font-size: 0.82rem; font-weight: 500; color: var(--gold-dark);
+    }
+
+    .reviews-summary {
+      display: flex; align-items: center; gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .big-score {
+      font-family: var(--font-display);
+      font-size: 3.5rem; font-weight: 700; color: var(--gold);
+      line-height: 1;
+    }
+    .score-details { }
+    .score-stars { color: var(--gold); font-size: 1.1rem; margin-bottom: 0.2rem; }
+    .score-count { font-size: 0.82rem; color: var(--text-muted); }
+
+    .review-item {
+      padding: 1.25rem 0;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .review-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .reviewer { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.6rem; }
+    .reviewer-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold-light), var(--gold));
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.9rem; color: white; flex-shrink: 0;
+    }
+    .reviewer-name { font-weight: 600; font-size: 0.875rem; color: var(--charcoal); }
+    .reviewer-date { font-size: 0.75rem; color: var(--text-light); }
+    .review-stars { color: var(--gold); font-size: 0.8rem; margin-bottom: 0.5rem; }
+    .review-text { font-size: 0.875rem; color: var(--text-muted); line-height: 1.7; }
+
+    /* BOOKING CARD */
+    .booking-card {
+      background: var(--white);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      padding: 2rem;
+      border: 1px solid var(--border-light);
+      position: sticky; top: 90px;
+    }
+    @media(max-width:768px){ .booking-card { position: static; } }
+
+    .booking-price {
+      padding-bottom: 1.5rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .booking-price .price-amount { font-size: 2rem; }
+    .booking-price .price-unit { font-size: 0.875rem; }
+
+    .booking-field { margin-bottom: 1rem; }
+    .booking-field label {
+      display: block;
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 0.5rem;
+    }
+    .booking-field input,
+    .booking-field select {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+      font-family: var(--font-body); font-size: 0.875rem;
+      color: var(--text); background: var(--off-white);
+      outline: none; transition: var(--transition); box-sizing: border-box;
+    }
+    .booking-field input:focus,
+    .booking-field select:focus { border-color: var(--gold); background: var(--white); }
+
+    .dates-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+
+    .booking-summary {
+      margin: 1.25rem 0;
+    }
+    .booking-summary .summary-row { font-size: 0.875rem; }
+
+    .btn-book {
+      width: 100%; padding: 1rem;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: white; border: none; border-radius: var(--radius-md);
+      font-family: var(--font-display); font-size: 1.05rem; font-weight: 600;
+      cursor: pointer; transition: var(--transition); letter-spacing: 0.03em;
+    }
+    .btn-book:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(201,169,110,0.4); }
+
+    .secure-note {
+      text-align: center; margin-top: 0.75rem;
+      font-size: 0.75rem; color: var(--text-light);
+    }
+    .btn-contact {
+      width: 100%; margin-top: 0.75rem;
+      padding: 0.75rem; border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border); background: transparent;
+      font-family: var(--font-body); font-size: 0.875rem;
+      color: var(--text-muted); cursor: pointer; transition: var(--transition);
+    }
+    .btn-contact:hover { border-color: var(--gold); color: var(--gold-dark); }
+
+    .similar-section { padding: 4rem 0; }
+    .similar-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar solid dark-text">
+  <a href="index.html" class="nav-logo"><div class="logo-icon">🌊</div>Egypt<span>Luxe</span></a>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="villages.html" class="nav-link">Destinations</a>
+    <a href="services.html" class="nav-link">Services</a>
+    <div class="nav-auth flex" id="nav-auth" style="display:flex!important;gap:0.5rem">
+      <a href="login.html" class="nav-btn outline nav-link">Login</a>
+      <a href="register.html" class="nav-btn gold">Register</a>
+    </div>
+    <div class="nav-user-area hidden flex" id="nav-user-area" style="gap:0.75rem;align-items:center">
+      <a href="profile.html" class="nav-link">Profile</a>
+      <div class="nav-avatar" onclick="location.href='profile.html'">U</div>
+      <button class="nav-btn outline nav-link logout-btn">Logout</button>
+    </div>
+  </div>
+  <button class="hamburger" style="color:var(--charcoal)"><span></span><span></span><span></span></button>
+</nav>
+<div class="mobile-overlay"></div>
+<nav class="mobile-nav">
+  <div class="mobile-nav-header">
+    <div class="nav-logo" style="color:var(--charcoal)">🌊 Egypt<span>Luxe</span></div>
+    <div class="mobile-nav-close">✕</div>
+  </div>
+  <a href="index.html">🏠 Home</a>
+  <a href="villages.html">🗺 Destinations</a>
+  <a href="services.html">🏨 Services</a>
+  <a href="login.html" class="mobile-auth-link">🔑 Login</a>
+  <a href="register.html" class="mobile-auth-link">✨ Register</a>
+  <a href="profile.html" class="mobile-user-link hidden">👤 Profile</a>
+  <a href="#" class="mobile-user-link hidden logout-btn">🚪 Logout</a>
+</nav>
+
+<!-- FLOW PROGRESS -->
+<div class="flow-progress">
+  <div class="container">
+    <div class="flow-steps">
+      <a href="index.html" class="flow-step done"><span class="flow-step-num">✓</span> Home</a>
+      <span class="flow-step-arrow">›</span>
+      <a href="villages.html" class="flow-step done"><span class="flow-step-num">✓</span> Browse Villages</a>
+      <span class="flow-step-arrow">›</span>
+      <span class="flow-step done" id="flow-village-step" style="cursor:pointer"><span class="flow-step-num">✓</span> <span id="flow-village-name">Village</span></span>
+      <span class="flow-step-arrow">›</span>
+      <span class="flow-step done" id="flow-services-step" style="cursor:pointer"><span class="flow-step-num">✓</span> <span id="flow-services-label">Services</span></span>
+      <span class="flow-step-arrow">›</span>
+      <span class="flow-step active"><span class="flow-step-num">5</span> Service Details</span>
+    </div>
+  </div>
+</div>
+
+<!-- GALLERY -->
+<div class="detail-gallery">
+  <div class="gallery-hero" id="galleryHero">
+    <img id="mainImg" src="" alt="">
+    <div class="gallery-hero-overlay"></div>
+    <div class="gallery-hero-info">
+      <div>
+        <div class="gallery-breadcrumb" id="galBreadcrumb"></div>
+        <h1 class="gallery-service-title" id="galTitle">Loading…</h1>
+        <div class="gallery-service-meta" id="galMeta"></div>
+      </div>
+      <div class="gallery-actions">
+        <button class="gallery-action" id="wishBtn" title="Save">♡</button>
+        <button class="gallery-action" onclick="shareIt()" title="Share">↗</button>
+      </div>
+    </div>
+  </div>
+  <div class="gallery-thumbs" id="galThumbs"></div>
+</div>
+
+<!-- CONTENT -->
+<div class="container">
+  <!-- Back navigation -->
+  <div style="padding-top:1.75rem;padding-bottom:0.25rem">
+    <a class="back-link" id="back-to-village" href="villages.html">← Back to Village</a>
+  </div>
+  <div class="detail-layout">
+
+    <!-- LEFT -->
+    <div>
+      <!-- Highlights -->
+      <div class="detail-section">
+        <h2 class="detail-section-title">Quick Highlights</h2>
+        <div class="highlights-grid" id="highlightsGrid"></div>
+      </div>
+
+      <!-- Description -->
+      <div class="detail-section">
+        <h2 class="detail-section-title">About This Place</h2>
+        <div class="desc-text" id="descText"></div>
+      </div>
+
+      <!-- Amenities -->
+      <div class="detail-section">
+        <h2 class="detail-section-title">Amenities & Features</h2>
+        <div class="amenities-list" id="amenitiesList"></div>
+      </div>
+
+      <!-- Reviews -->
+      <div class="detail-section">
+        <h2 class="detail-section-title">Guest Reviews</h2>
+        <div class="reviews-summary">
+          <div class="big-score" id="bigScore">0.0</div>
+          <div class="score-details">
+            <div class="score-stars" id="scoreStars"></div>
+            <div class="score-count" id="scoreCount">0 reviews</div>
+          </div>
+        </div>
+        <div id="reviewsList"></div>
+      </div>
+    </div>
+
+    <!-- RIGHT: BOOKING -->
+    <aside>
+      <div class="booking-card">
+        <div class="booking-price">
+          <div class="price-badge">
+            <span class="price-amount" id="bkPrice">EGP 0</span>
+            <span class="price-unit"> / night</span>
+          </div>
+          <div style="font-size:0.75rem;color:var(--text-light);margin-top:0.25rem">Taxes & fees included</div>
+        </div>
+
+        <div class="dates-grid">
+          <div class="booking-field">
+            <label>Check In</label>
+            <input type="date" id="bkCheckIn">
+          </div>
+          <div class="booking-field">
+            <label>Check Out</label>
+            <input type="date" id="bkCheckOut">
+          </div>
+        </div>
+
+        <div class="booking-field">
+          <label>Guests</label>
+          <select id="bkGuests">
+            <option value="1">1 Guest</option>
+            <option value="2" selected>2 Guests</option>
+            <option value="3">3 Guests</option>
+            <option value="4">4 Guests</option>
+            <option value="5">5+ Guests</option>
+          </select>
+        </div>
+
+        <div class="booking-summary booking-summary-box">
+          <div class="summary-row"><span class="summary-label" id="nightsLbl">Select dates</span><span class="summary-value" id="subtotalVal">–</span></div>
+          <div class="summary-row"><span class="summary-label">Service fee (10%)</span><span class="summary-value" id="feeVal">–</span></div>
+          <div class="summary-row summary-total"><span class="summary-label">Total</span><span class="summary-value" id="totalVal">–</span></div>
+        </div>
+
+        <button class="btn-book" id="bkBtn">Reserve Now</button>
+        <div class="secure-note">🔒 Free cancellation · Secure booking</div>
+        <button class="btn-contact" onclick="Toast.show('Message sent to host!','success')">💬 Contact Host</button>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- SIMILAR -->
+<div class="container">
+  <div class="similar-section">
+    <div class="section-header">
+      <div class="section-eyebrow">Explore More</div>
+      <h2 class="section-title">You Might Also Like</h2>
+    </div>
+    <div class="similar-grid" id="similarGrid"></div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script>
+(function(){
+  Nav.init();
+
+  // Auth state
+  const user = Auth.getUser();
+  if (user) {
+    document.getElementById('nav-auth')?.classList.add('hidden');
+    const ua = document.getElementById('nav-user-area');
+    if (ua) { ua.classList.remove('hidden'); ua.style.display='flex'; const av = ua.querySelector('.nav-avatar'); if(av) av.textContent = user.name?.[0]?.toUpperCase()||'U'; }
+  }
+
+  const sid = getParam('service');
+  if (!sid) { location.href='services.html'; return; }
+  const svc = AppData.getServiceById(sid);
+  if (!svc) { location.href='services.html'; return; }
+  const village = AppData.getVillageById(svc.village);
+
+  // Update flow progress bar
+  if (village) {
+    const vName = document.getElementById('flow-village-name');
+    const vStep = document.getElementById('flow-village-step');
+    if (vName) vName.textContent = village.name.split('–')[0].trim();
+    if (vStep) vStep.onclick = () => window.location.href = `village-details.html?village=${village.id}`;
+    const sLabel = document.getElementById('flow-services-label');
+    const sStep = document.getElementById('flow-services-step');
+    if (sLabel) sLabel.textContent = svc.category.charAt(0).toUpperCase() + svc.category.slice(1);
+    if (sStep) sStep.onclick = () => window.location.href = `village-details.html?village=${village.id}&category=${svc.category}`;
+    // Back link
+    const backLink = document.getElementById('back-to-village');
+    if (backLink) {
+      backLink.href = `village-details.html?village=${village.id}&category=${svc.category}`;
+      backLink.textContent = `← Back to ${village.name.split('–')[0].trim()}`;
+    }
+  }
+
+  // Gallery
+  const imgs = svc.images && svc.images.length ? svc.images : [svc.image];
+  let curImg = 0;
+  function setImg(i){
+    curImg = i;
+    document.getElementById('mainImg').src = imgs[i];
+    document.getElementById('mainImg').alt = svc.name;
+    document.querySelectorAll('.gallery-thumb-item').forEach((t,idx) => t.classList.toggle('active', idx===i));
+  }
+  const thumbs = document.getElementById('galThumbs');
+  imgs.slice(0,4).forEach((img,i) => {
+    const d = document.createElement('div');
+    d.className = 'gallery-thumb-item' + (i===0?' active':'');
+    d.innerHTML = `<img src="${img}" alt="Photo ${i+1}" loading="lazy">`;
+    d.addEventListener('click', () => setImg(i));
+    thumbs.appendChild(d);
+  });
+  setImg(0);
+  document.title = svc.name + ' – Egypt Luxe';
+
+  // Breadcrumb & meta
+  document.getElementById('galBreadcrumb').innerHTML =
+    `<a href="index.html">Home</a><span> › </span>
+     <a href="villages.html">Villages</a><span> › </span>
+     ${village ? `<a href="village-details.html?village=${village.id}">${village.name}</a><span> › </span>` : ''}
+     <span>${svc.name}</span>`;
+  document.getElementById('galTitle').textContent = svc.name;
+  document.getElementById('galMeta').innerHTML =
+    `<span class="tag">${svc.category.charAt(0).toUpperCase()+svc.category.slice(1)}</span>
+     <span class="rating-pill"><span class="stars">★</span> ${svc.rating} · ${svc.reviewCount} reviews</span>
+     <span class="location-pill">📍 ${village ? village.name : ''}, Egypt</span>`;
+
+  // Wishlist
+  function updateWish(){
+    const w = Wishlist.isWishlisted(svc.id);
+    const btn = document.getElementById('wishBtn');
+    btn.textContent = w ? '♥' : '♡';
+    btn.classList.toggle('liked', w);
+  }
+  updateWish();
+  document.getElementById('wishBtn').addEventListener('click', () => {
+    toggleWishlist({stopPropagation:()=>{}}, svc.id);
+    updateWish();
+  });
+
+  // Highlights
+  const hls = [
+    {ico:'💰', lbl:'Price', val: formatPrice(svc.price) + ' / ' + svc.unit},
+    {ico:'⭐', lbl:'Rating', val: svc.rating + ' / 5.0'},
+    {ico:'📝', lbl:'Reviews', val: svc.reviewCount + ' guests'},
+    {ico:'🏖️', lbl:'Location', val: village ? village.name : 'Egypt'},
+    {ico:'✅', lbl:'Availability', val: svc.available ? 'Available' : 'Check dates'},
+    {ico:'🏷️', lbl:'Category', val: svc.category},
+  ];
+  document.getElementById('highlightsGrid').innerHTML = hls.map(h =>
+    `<div class="highlight-card"><span class="highlight-ico">${h.ico}</span>
+      <div><div class="highlight-lbl">${h.lbl}</div><div class="highlight-val">${h.val}</div></div>
+    </div>`).join('');
+
+  // Description
+  document.getElementById('descText').innerHTML =
+    `<p>${svc.description}</p>
+     <p>Perfect for families, couples, and groups seeking a luxurious escape along Egypt's finest coastline. Our team ensures every detail of your stay is carefully taken care of.</p>`;
+
+  // Amenities
+  const ams = svc.amenities && svc.amenities.length ? svc.amenities : ['🏊 Pool','📶 WiFi','❄️ AC','🅿️ Parking','🍽️ Restaurant','🔒 Security'];
+  document.getElementById('amenitiesList').innerHTML = ams.map(a =>
+    `<div class="amenity-chip">${a}</div>`).join('');
+
+  // Reviews
+  const score = svc.rating;
+  document.getElementById('bigScore').textContent = score;
+  document.getElementById('scoreStars').innerHTML = Array.from({length:5},(_,i)=>`<span>${i < Math.round(score) ? '★' : '☆'}</span>`).join('');
+  document.getElementById('scoreCount').textContent = svc.reviewCount + ' verified reviews';
+
+  const reviews = AppData.reviews || [];
+  document.getElementById('reviewsList').innerHTML = reviews.map(r =>
+    `<div class="review-item">
+      <div class="reviewer">
+        <div class="reviewer-avatar">${r.name.charAt(0)}</div>
+        <div><div class="reviewer-name">${r.name}</div><div class="reviewer-date">${r.date} · Verified Guest</div></div>
+      </div>
+      <div class="review-stars">${Array.from({length:5},(_,i)=>`<span>${i<r.rating?'★':'☆'}</span>`).join('')}</div>
+      <p class="review-text">${r.text}</p>
+    </div>`).join('');
+
+  // Booking price
+  document.getElementById('bkPrice').textContent = formatPrice(svc.price);
+
+  const today = new Date();
+  const t1 = new Date(today); t1.setDate(today.getDate()+1);
+  const t2 = new Date(today); t2.setDate(today.getDate()+4);
+  document.getElementById('bkCheckIn').value = t1.toISOString().split('T')[0];
+  document.getElementById('bkCheckOut').value = t2.toISOString().split('T')[0];
+
+  function calcPrice(){
+    const ci = document.getElementById('bkCheckIn').value;
+    const co = document.getElementById('bkCheckOut').value;
+    if (!ci||!co) return;
+    const nights = Math.max(1, Math.ceil((new Date(co)-new Date(ci))/86400000));
+    const sub = svc.price * nights;
+    const fee = sub * 0.10;
+    const tax = sub * 0.14;
+    const total = sub + fee + tax;
+    document.getElementById('nightsLbl').textContent = `${formatPrice(svc.price)} × ${nights} nights`;
+    document.getElementById('subtotalVal').textContent = formatPrice(sub);
+    document.getElementById('feeVal').textContent = formatPrice(fee);
+    document.getElementById('totalVal').textContent = formatPrice(total);
+  }
+  document.getElementById('bkCheckIn').addEventListener('change', calcPrice);
+  document.getElementById('bkCheckOut').addEventListener('change', calcPrice);
+  calcPrice();
+
+  // Book
+  document.getElementById('bkBtn').addEventListener('click', () => {
+    if (!Auth.isLoggedIn()) { Toast.show('Please login to book','warning'); setTimeout(()=>location.href='login.html',1100); return; }
+    const ci = document.getElementById('bkCheckIn').value;
+    const co = document.getElementById('bkCheckOut').value;
+    if (!ci||!co) { Toast.show('Select check-in and check-out dates','warning'); return; }
+    const nights = Math.ceil((new Date(co)-new Date(ci))/86400000);
+    if (nights < 1) { Toast.show('Invalid dates','warning'); return; }
+    const guests = document.getElementById('bkGuests').value;
+    const sub = svc.price * nights;
+    sessionStorage.setItem('egyptluxe_pending_booking', JSON.stringify({
+      serviceId: svc.id, checkIn: ci, checkOut: co, guests, nights, pricePerNight: svc.price,
+      subtotal: sub, fee: sub*0.10, tax: sub*0.14, total: sub+sub*0.10+sub*0.14
+    }));
+    location.href = `booking.html?service=${svc.id}`;
+  });
+
+  // Similar
+  const similar = AppData.getAllServices().filter(s => s.id!==svc.id && (s.category===svc.category||s.village===svc.village)).slice(0,4);
+  document.getElementById('similarGrid').innerHTML = similar.map(s=>renderServiceCard(s)).join('');
+
+  window.shareIt = function(){
+    if (navigator.share) navigator.share({title:svc.name, url:location.href});
+    else { navigator.clipboard.writeText(location.href); Toast.show('Link copied!','success'); }
+  };
+})();
+</script>
+</body>
+</html>

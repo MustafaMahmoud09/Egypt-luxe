@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Services – Egypt Luxe</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .services-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 2rem;
+      align-items: start;
+      padding: 2.5rem 0 5rem;
+    }
+    @media(max-width:1024px){ .services-layout { grid-template-columns: 240px 1fr; } }
+    @media(max-width:768px){ .services-layout { grid-template-columns: 1fr; } }
+
+    .sidebar {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      border: 1px solid var(--border-light);
+      box-shadow: var(--shadow-sm);
+      position: sticky;
+      top: 90px;
+    }
+    @media(max-width:768px){ .sidebar { position: static; } }
+
+    .sidebar-section { margin-bottom: 1.75rem; }
+    .sidebar-section:last-child { margin-bottom: 0; }
+
+    .sidebar-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.875rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .sidebar-search { position: relative; }
+    .sidebar-search input {
+      width: 100%;
+      padding: 0.7rem 1rem 0.7rem 2.4rem;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 0.875rem;
+      font-family: var(--font-body);
+      background: var(--off-white);
+      color: var(--text);
+      outline: none;
+      transition: var(--transition);
+      box-sizing: border-box;
+    }
+    .sidebar-search input:focus { border-color: var(--gold); background: var(--white); }
+    .sidebar-search-ico { position: absolute; left: 0.8rem; top: 50%; transform: translateY(-50%); color: var(--text-light); font-size: 0.85rem; }
+
+    .cat-filter-list { display: flex; flex-direction: column; gap: 0.2rem; }
+    .cat-filter-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.6rem 0.8rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 0.875rem; font-weight: 500;
+      color: var(--text-muted);
+      transition: var(--transition);
+    }
+    .cat-filter-item:hover { background: var(--gold-pale); color: var(--gold-dark); }
+    .cat-filter-item.active { background: linear-gradient(135deg, var(--gold), var(--gold-dark)); color: white; }
+    .cat-filter-left { display: flex; align-items: center; gap: 0.55rem; }
+    .cat-cnt {
+      font-size: 0.7rem; padding: 0.15rem 0.5rem; border-radius: 50px;
+      background: rgba(0,0,0,0.07); font-weight: 600;
+    }
+    .cat-filter-item.active .cat-cnt { background: rgba(255,255,255,0.2); }
+
+    .price-inputs { display: grid; grid-template-columns: 1fr auto 1fr; gap: 0.5rem; align-items: center; }
+    .price-inputs input {
+      width: 100%; padding: 0.6rem 0.7rem;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 0.82rem; font-family: var(--font-body);
+      background: var(--off-white); color: var(--text);
+      outline: none; transition: var(--transition); box-sizing: border-box;
+    }
+    .price-inputs input:focus { border-color: var(--gold); }
+    .price-dash { color: var(--text-light); font-size: 0.82rem; text-align: center; }
+
+    .rating-filter { display: flex; flex-direction: column; gap: 0.35rem; }
+    .rating-filter label {
+      display: flex; align-items: center; gap: 0.6rem;
+      padding: 0.45rem 0.7rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer; font-size: 0.82rem;
+      color: var(--text-muted); transition: var(--transition);
+    }
+    .rating-filter label:hover { background: var(--gold-pale); }
+    .rating-filter input[type="radio"] { accent-color: var(--gold); }
+    .rating-filter .stars { color: var(--gold); font-size: 0.8rem; }
+
+    .toolbar {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 1.25rem; gap: 1rem; flex-wrap: wrap;
+    }
+    .toolbar-info { font-size: 0.875rem; color: var(--text-muted); }
+    .toolbar-info strong { color: var(--charcoal); }
+    .toolbar-controls { display: flex; align-items: center; gap: 0.6rem; }
+
+    .sort-sel {
+      padding: 0.5rem 2rem 0.5rem 0.8rem;
+      border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+      font-size: 0.82rem; font-family: var(--font-body);
+      background: var(--white); color: var(--text);
+      cursor: pointer; outline: none; appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23B0A090' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 0.7rem center;
+    }
+
+    .view-toggle { display: flex; gap: 0.2rem; }
+    .v-btn {
+      width: 32px; height: 32px; border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border); background: var(--white);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem; color: var(--text-light); cursor: pointer; transition: var(--transition);
+    }
+    .v-btn.active { border-color: var(--gold); color: var(--gold); background: var(--gold-pale); }
+    .v-btn:hover:not(.active) { border-color: var(--gold-light); color: var(--gold); }
+
+    .applied-filters { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+    .applied-filter {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      padding: 0.3rem 0.75rem; border-radius: 50px;
+      background: var(--gold-pale); border: 1px solid var(--gold-light);
+      color: var(--gold-dark); font-size: 0.78rem; font-weight: 500;
+    }
+    .applied-filter button { background: none; border: none; color: var(--gold-dark); cursor: pointer; font-size: 0.95rem; padding: 0; line-height: 1; }
+
+    .svc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(268px, 1fr));
+      gap: 1.5rem;
+    }
+    .svc-grid.list { grid-template-columns: 1fr; }
+    .svc-grid.list .card { display: grid; grid-template-columns: 230px 1fr; }
+    .svc-grid.list .card-image { height: 100%; min-height: 180px; }
+    @media(max-width:600px){
+      .svc-grid.list .card { grid-template-columns: 1fr; }
+      .svc-grid.list .card-image { height: 200px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar solid dark-text">
+  <a href="index.html" class="nav-logo"><div class="logo-icon">🌊</div>Egypt<span>Luxe</span></a>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="villages.html" class="nav-link">Destinations</a>
+    <a href="services.html" class="nav-link">Services</a>
+    <div class="nav-auth flex" id="nav-auth" style="display:flex!important;gap:0.5rem">
+      <a href="login.html" class="nav-btn outline nav-link">Login</a>
+      <a href="register.html" class="nav-btn gold">Register</a>
+    </div>
+    <div class="nav-user-area hidden flex" id="nav-user-area" style="gap:0.75rem;align-items:center">
+      <a href="profile.html" class="nav-link">Profile</a>
+      <div class="nav-avatar" onclick="location.href='profile.html'">U</div>
+      <button class="nav-btn outline nav-link logout-btn">Logout</button>
+    </div>
+  </div>
+  <button class="hamburger" style="color:var(--charcoal)"><span></span><span></span><span></span></button>
+</nav>
+<div class="mobile-overlay"></div>
+<nav class="mobile-nav">
+  <div class="mobile-nav-header">
+    <div class="nav-logo" style="color:var(--charcoal)">🌊 Egypt<span>Luxe</span></div>
+    <div class="mobile-nav-close">✕</div>
+  </div>
+  <a href="index.html">🏠 Home</a>
+  <a href="villages.html">🗺 Destinations</a>
+  <a href="services.html">🏨 Services</a>
+  <a href="login.html" class="mobile-auth-link">🔑 Login</a>
+  <a href="register.html" class="mobile-auth-link">✨ Register</a>
+  <a href="profile.html" class="mobile-user-link hidden">👤 Profile</a>
+  <a href="#" class="mobile-user-link hidden logout-btn">🚪 Logout</a>
+</nav>
+
+<!-- FLOW PROGRESS -->
+<div class="flow-progress">
+  <div class="container">
+    <div class="flow-steps">
+      <a href="index.html" class="flow-step done"><span class="flow-step-num">✓</span> Home</a>
+      <span class="flow-step-arrow">›</span>
+      <a href="villages.html" class="flow-step done"><span class="flow-step-num">✓</span> Browse Villages</a>
+      <span class="flow-step-arrow">›</span>
+      <span class="flow-step done" id="flow-village-link" style="cursor:pointer"><span class="flow-step-num">✓</span> <span id="flow-village-label">Village</span></span>
+      <span class="flow-step-arrow">›</span>
+      <span class="flow-step active"><span class="flow-step-num">4</span> View Services</span>
+      <span class="flow-step-arrow">›</span>
+      <span class="flow-step" style="opacity:0.45"><span class="flow-step-num">5</span> Service Details</span>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a>
+      <span class="breadcrumb-sep">›</span>
+      <span id="breadcrumbExtra">Services</span>
+    </div>
+    <h1 class="section-title" id="pageTitle" style="margin-bottom:0.4rem">All Services</h1>
+    <p class="section-subtitle" style="margin:0" id="pageSubtitle">Discover hotels, restaurants, activities & more</p>
+  </div>
+</div>
+
+<div class="container">
+  <div class="services-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-label">Search</div>
+        <div class="sidebar-search">
+          <span class="sidebar-search-ico">🔍</span>
+          <input type="text" id="sideSearch" placeholder="Search services…">
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">Category</div>
+        <div class="cat-filter-list" id="catList">
+          <div class="cat-filter-item active" data-cat="all">
+            <div class="cat-filter-left">🌟 All</div>
+            <span class="cat-cnt" id="cnt-all">0</span>
+          </div>
+          <div class="cat-filter-item" data-cat="hotels">
+            <div class="cat-filter-left">🏨 Hotels</div>
+            <span class="cat-cnt" id="cnt-hotels">0</span>
+          </div>
+          <div class="cat-filter-item" data-cat="chalets">
+            <div class="cat-filter-left">🏡 Chalets</div>
+            <span class="cat-cnt" id="cnt-chalets">0</span>
+          </div>
+          <div class="cat-filter-item" data-cat="apartments">
+            <div class="cat-filter-left">🏢 Apartments</div>
+            <span class="cat-cnt" id="cnt-apartments">0</span>
+          </div>
+          <div class="cat-filter-item" data-cat="restaurants">
+            <div class="cat-filter-left">🍽 Restaurants</div>
+            <span class="cat-cnt" id="cnt-restaurants">0</span>
+          </div>
+          <div class="cat-filter-item" data-cat="cafes">
+            <div class="cat-filter-left">☕ Cafes</div>
+            <span class="cat-cnt" id="cnt-cafes">0</span>
+          </div>
+          <div class="cat-filter-item" data-cat="activities">
+            <div class="cat-filter-left">🎯 Activities</div>
+            <span class="cat-cnt" id="cnt-activities">0</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">Price Range (EGP / night)</div>
+        <div class="price-inputs">
+          <input type="number" id="priceMin" placeholder="Min" min="0">
+          <span class="price-dash">–</span>
+          <input type="number" id="priceMax" placeholder="Max" min="0">
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">Minimum Rating</div>
+        <div class="rating-filter">
+          <label><input type="radio" name="minRating" value="0" checked> <span class="stars">★★★★★</span> Any</label>
+          <label><input type="radio" name="minRating" value="4.5"> <span class="stars">★★★★★</span> 4.5+</label>
+          <label><input type="radio" name="minRating" value="4"> <span class="stars">★★★★</span>☆ 4.0+</label>
+          <label><input type="radio" name="minRating" value="3"> <span class="stars">★★★</span>☆☆ 3.0+</label>
+        </div>
+      </div>
+
+      <button class="btn btn-primary w-full" id="applyBtn">Apply Filters</button>
+    </aside>
+
+    <!-- MAIN -->
+    <main>
+      <div class="applied-filters" id="appliedFilters"></div>
+      <div class="toolbar">
+        <p class="toolbar-info">Showing <strong id="countLabel">0</strong> services</p>
+        <div class="toolbar-controls">
+          <select class="sort-sel" id="sortSel">
+            <option value="default">Featured</option>
+            <option value="price-low">Price ↑</option>
+            <option value="price-high">Price ↓</option>
+            <option value="rating">Top Rated</option>
+          </select>
+          <div class="view-toggle">
+            <button class="v-btn active" id="gridBtn" title="Grid">⊞</button>
+            <button class="v-btn" id="listBtn" title="List">☰</button>
+          </div>
+        </div>
+      </div>
+      <div class="svc-grid" id="svcGrid"></div>
+    </main>
+  </div>
+</div>
+
+<footer class="footer" style="margin-top:3rem">
+  <div class="container">
+    <div class="footer-bottom">
+      <span>© 2025 Egypt Luxe. All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<div id="toast-container"></div>
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script>
+(function(){
+  Nav.init();
+  const params = new URLSearchParams(window.location.search);
+  const vp = params.get('village'), cp = params.get('category');
+  let allSvcs = [], currentCat = cp||'all', sort = 'default';
+  let searchQ = '', pMin = 0, pMax = Infinity, minR = 0;
+
+  // Update auth state
+  const user = Auth.getUser();
+  if (user) {
+    document.getElementById('nav-auth')?.classList.add('hidden');
+    const ua = document.getElementById('nav-user-area');
+    if (ua) { ua.classList.remove('hidden'); ua.style.display='flex'; const av = ua.querySelector('.nav-avatar'); if(av) av.textContent = user.name?.[0]?.toUpperCase()||'U'; }
+  }
+
+  // Update flow progress village label
+  const flowVillageLabel = document.getElementById('flow-village-label');
+  const flowVillageLink = document.getElementById('flow-village-link');
+  if (vp && flowVillageLabel) {
+    const v = AppData.getVillageById(vp);
+    if (v) {
+      flowVillageLabel.textContent = v.name.split('–')[0].trim();
+      if (flowVillageLink) flowVillageLink.onclick = () => window.location.href = `village-details.html?village=${vp}`;
+    }
+  } else if (flowVillageLink) {
+    flowVillageLink.onclick = () => window.location.href = 'villages.html';
+    if (flowVillageLabel) flowVillageLabel.textContent = 'Villages';
+  }
+
+  if (vp) {
+    const v = AppData.getVillageById(vp);
+    const cats = AppData.services[vp]||{};
+    Object.values(cats).forEach(a => allSvcs.push(...a));
+    if (v) {
+      document.getElementById('pageTitle').textContent = v.name;
+      document.getElementById('pageSubtitle').textContent = 'All services in ' + v.name;
+      document.getElementById('breadcrumbExtra').innerHTML =
+        `<a href="village-details.html?village=${vp}">${v.name}</a> <span class="breadcrumb-sep">›</span> Services`;
+    }
+  } else {
+    allSvcs = AppData.getAllServices();
+  }
+
+  function updateCounts(s){
+    ['all','hotels','chalets','apartments','restaurants','cafes','activities'].forEach(c => {
+      const el = document.getElementById('cnt-'+c);
+      if (el) el.textContent = c==='all' ? s.length : s.filter(x=>x.category===c).length;
+    });
+  }
+
+  function render(){
+    let res = [...allSvcs];
+    if (currentCat!=='all') res = res.filter(s=>s.category===currentCat);
+    if (searchQ) res = res.filter(s=>s.name.toLowerCase().includes(searchQ)||s.description.toLowerCase().includes(searchQ));
+    if (pMin>0) res = res.filter(s=>s.price>=pMin);
+    if (pMax<Infinity) res = res.filter(s=>s.price<=pMax);
+    if (minR>0) res = res.filter(s=>s.rating>=minR);
+    if (sort==='price-low') res.sort((a,b)=>a.price-b.price);
+    else if (sort==='price-high') res.sort((a,b)=>b.price-a.price);
+    else if (sort==='rating') res.sort((a,b)=>b.rating-a.rating);
+
+    document.getElementById('countLabel').textContent = res.length;
+    const grid = document.getElementById('svcGrid');
+    grid.innerHTML = res.length
+      ? res.map(s=>renderServiceCard(s)).join('')
+      : `<div class="empty-state" style="grid-column:1/-1"><div class="empty-state-icon">🔍</div><h3 class="empty-state-title">No results</h3><p class="empty-state-text">Try changing your filters</p></div>`;
+
+    // Applied filters
+    const tags = [];
+    if (currentCat!=='all') tags.push({l:currentCat, k:'cat'});
+    if (pMin>0) tags.push({l:`Min EGP ${pMin}`, k:'pmin'});
+    if (pMax<Infinity) tags.push({l:`Max EGP ${pMax}`, k:'pmax'});
+    if (minR>0) tags.push({l:`Rating ≥ ${minR}`, k:'rating'});
+    document.getElementById('appliedFilters').innerHTML = tags.map(t=>
+      `<span class="applied-filter">${t.l} <button onclick="clearF('${t.k}')">×</button></span>`
+    ).join('');
+  }
+
+  window.clearF = function(k){
+    if(k==='cat'){currentCat='all';document.querySelectorAll('.cat-filter-item').forEach(i=>i.classList.remove('active'));document.querySelector('[data-cat="all"]').classList.add('active');}
+    if(k==='pmin'){pMin=0;document.getElementById('priceMin').value='';}
+    if(k==='pmax'){pMax=Infinity;document.getElementById('priceMax').value='';}
+    if(k==='rating'){minR=0;document.querySelector('input[name="minRating"][value="0"]').checked=true;}
+    render();
+  };
+
+  document.getElementById('catList').addEventListener('click', e=>{
+    const item = e.target.closest('[data-cat]');
+    if (!item) return;
+    document.querySelectorAll('.cat-filter-item').forEach(i=>i.classList.remove('active'));
+    item.classList.add('active');
+    currentCat = item.dataset.cat;
+    render();
+  });
+
+  document.getElementById('sideSearch').addEventListener('input', function(){ searchQ=this.value.toLowerCase().trim(); render(); });
+  document.getElementById('sortSel').addEventListener('change', function(){ sort=this.value; render(); });
+  document.getElementById('applyBtn').addEventListener('click', ()=>{
+    pMin = parseFloat(document.getElementById('priceMin').value)||0;
+    const pmx = parseFloat(document.getElementById('priceMax').value);
+    pMax = pmx||Infinity;
+    minR = parseFloat(document.querySelector('input[name="minRating"]:checked').value)||0;
+    render(); Toast.show('Filters applied','success');
+  });
+
+  document.getElementById('gridBtn').addEventListener('click', function(){
+    this.classList.add('active'); document.getElementById('listBtn').classList.remove('active');
+    document.getElementById('svcGrid').classList.remove('list');
+  });
+  document.getElementById('listBtn').addEventListener('click', function(){
+    this.classList.add('active'); document.getElementById('gridBtn').classList.remove('active');
+    document.getElementById('svcGrid').classList.add('list');
+  });
+
+  if (cp) {
+    document.querySelectorAll('.cat-filter-item').forEach(i=>i.classList.remove('active'));
+    const t = document.querySelector(`[data-cat="${cp}"]`);
+    if (t) t.classList.add('active');
+  }
+
+  updateCounts(allSvcs);
+  render();
+})();
+</script>
+</body>
+</html>

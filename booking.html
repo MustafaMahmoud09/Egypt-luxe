@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Booking – Egypt Luxe</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    body { background: var(--off-white); }
+
+    .booking-hero {
+      background: linear-gradient(135deg, #0D0D0D 0%, #1A1208 100%);
+      padding: 6rem 0 3rem;
+      text-align: center;
+    }
+    .booking-hero h1 { font-family: var(--font-display); font-size: clamp(1.6rem,3vw,2.2rem); color: white; }
+    .booking-hero h1 span { color: var(--gold); }
+    .booking-hero p { color: rgba(255,255,255,0.6); font-size: 0.9rem; margin-top: 0.5rem; }
+
+    .steps {
+      display: flex; align-items: center; justify-content: center;
+      gap: 0; margin-top: 2rem; flex-wrap: wrap;
+    }
+    .step-item { display: flex; align-items: center; gap: 0.5rem; }
+    .step-circle {
+      width: 34px; height: 34px; border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.25);
+      color: rgba(255,255,255,0.45);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.82rem; font-weight: 600; font-family: var(--font-body);
+    }
+    .step-item.active .step-circle { border-color: var(--gold); color: var(--gold); }
+    .step-item.done .step-circle { background: var(--gold); border-color: var(--gold); color: white; }
+    .step-name { font-size: 0.8rem; color: rgba(255,255,255,0.45); font-family: var(--font-body); }
+    .step-item.active .step-name { color: white; }
+    .step-item.done .step-name { color: var(--gold-light); }
+    .step-line { width: 50px; height: 2px; background: rgba(255,255,255,0.12); margin: 0 0.25rem; }
+    .step-line.done { background: var(--gold); }
+
+    .bk-layout {
+      display: grid; grid-template-columns: 1fr 360px;
+      gap: 2rem; padding: 3rem 0 5rem; align-items: start;
+    }
+    @media(max-width:900px){ .bk-layout { grid-template-columns: 1fr; } }
+
+    .bk-section {
+      background: var(--white); border-radius: var(--radius-lg);
+      padding: 2rem; border: 1px solid var(--border-light);
+      box-shadow: var(--shadow-sm); margin-bottom: 1.25rem;
+    }
+    .bk-section-title {
+      font-family: var(--font-display); font-size: 1.1rem; font-weight: 600;
+      color: var(--charcoal); margin-bottom: 1.5rem;
+      padding-bottom: 1rem; border-bottom: 1px solid var(--border-light);
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    .step-dot {
+      width: 26px; height: 26px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: white; display: flex; align-items: center; justify-content: center;
+      font-size: 0.78rem; font-weight: 700; flex-shrink: 0;
+    }
+
+    .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media(max-width:580px){ .form-grid-2 { grid-template-columns: 1fr; } }
+
+    .form-group { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1rem; }
+    .form-group:last-child { margin-bottom: 0; }
+    .form-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); }
+    .form-input {
+      width: 100%; padding: 0.8rem 1rem;
+      border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+      font-size: 0.9rem; font-family: var(--font-body);
+      color: var(--text); background: var(--white); outline: none;
+      transition: var(--transition); box-sizing: border-box;
+    }
+    .form-input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,169,110,0.1); }
+    .form-input::placeholder { color: var(--text-light); }
+    textarea.form-input { resize: vertical; min-height: 88px; }
+
+    .guests-counter {
+      display: flex; align-items: center;
+      border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+      overflow: hidden; background: var(--white);
+    }
+    .counter-btn {
+      width: 44px; height: 46px; background: transparent; border: none;
+      font-size: 1.25rem; color: var(--gold-dark); cursor: pointer; transition: var(--transition);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .counter-btn:hover { background: var(--gold-pale); }
+    .counter-val { flex: 1; text-align: center; font-weight: 600; font-size: 0.95rem; color: var(--charcoal); }
+
+    .policy-box {
+      display: flex; gap: 0.75rem; align-items: flex-start;
+      background: var(--gold-pale); border-radius: var(--radius-sm);
+      padding: 1rem 1.25rem; border: 1px solid var(--gold-light);
+      font-size: 0.82rem; color: var(--text-muted); line-height: 1.65;
+    }
+    .policy-box .icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+
+    /* Summary card */
+    .summary-card {
+      background: var(--white); border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg); border: 1px solid var(--border-light);
+      overflow: hidden; position: sticky; top: 90px;
+    }
+    @media(max-width:900px){ .summary-card { position: static; } }
+
+    .summary-card img { width: 100%; height: 190px; object-fit: cover; }
+    .summary-card-body { padding: 1.75rem; }
+    .summary-cat { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.09em; color: var(--gold); margin-bottom: 0.3rem; }
+    .summary-name { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; color: var(--charcoal); margin-bottom: 0.3rem; }
+    .summary-loc { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1.25rem; }
+
+    .dates-pills {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1.25rem;
+    }
+    .date-pill { background: var(--off-white); border: 1px solid var(--border-light); border-radius: var(--radius-sm); padding: 0.75rem 1rem; }
+    .date-pill-lbl { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-light); margin-bottom: 0.25rem; }
+    .date-pill-val { font-size: 0.875rem; font-weight: 600; color: var(--charcoal); }
+
+    .continue-btn {
+      width: 100%; padding: 1rem;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: white; border: none; border-radius: var(--radius-md);
+      font-family: var(--font-display); font-size: 1rem; font-weight: 600;
+      cursor: pointer; transition: var(--transition); letter-spacing: 0.03em;
+    }
+    .continue-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(201,169,110,0.4); }
+    .continue-btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+
+    .back-link { display: block; text-align: center; margin-top: 0.75rem; font-size: 0.82rem; color: var(--gold); cursor: pointer; }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar solid dark-text">
+  <a href="index.html" class="nav-logo"><div class="logo-icon">🌊</div>Egypt<span>Luxe</span></a>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="villages.html" class="nav-link">Destinations</a>
+    <div class="nav-user-area hidden flex" id="nav-user-area" style="gap:0.75rem;align-items:center">
+      <div class="nav-avatar" onclick="location.href='profile.html'">U</div>
+      <button class="nav-btn outline nav-link logout-btn">Logout</button>
+    </div>
+  </div>
+  <button class="hamburger" style="color:var(--charcoal)"><span></span><span></span><span></span></button>
+</nav>
+<div class="mobile-overlay"></div>
+<nav class="mobile-nav">
+  <div class="mobile-nav-header">
+    <div class="nav-logo" style="color:var(--charcoal)">🌊 Egypt<span>Luxe</span></div>
+    <div class="mobile-nav-close">✕</div>
+  </div>
+  <a href="index.html">🏠 Home</a>
+  <a href="#" class="mobile-user-link logout-btn">🚪 Logout</a>
+</nav>
+
+<!-- HERO -->
+<div class="booking-hero">
+  <h1>Complete Your <span>Booking</span></h1>
+  <p>You're just a few steps away from your perfect escape</p>
+  <div class="steps">
+    <div class="step-item active">
+      <div class="step-circle">1</div>
+      <span class="step-name">Details</span>
+    </div>
+    <div class="step-line"></div>
+    <div class="step-item">
+      <div class="step-circle">2</div>
+      <span class="step-name">Payment</span>
+    </div>
+    <div class="step-line"></div>
+    <div class="step-item">
+      <div class="step-circle">3</div>
+      <span class="step-name">Confirmed</span>
+    </div>
+  </div>
+</div>
+
+<!-- LAYOUT -->
+<div class="container">
+  <div class="bk-layout">
+
+    <!-- FORM -->
+    <div>
+      <div class="bk-section">
+        <h2 class="bk-section-title"><span class="step-dot">1</span> Guest Information</h2>
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">First Name</label>
+            <input class="form-input" type="text" id="firstName" placeholder="First name">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Last Name</label>
+            <input class="form-input" type="text" id="lastName" placeholder="Last name">
+          </div>
+        </div>
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input class="form-input" type="email" id="guestEmail" placeholder="your@email.com">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phone</label>
+            <input class="form-input" type="tel" id="guestPhone" placeholder="+20 xxx xxx xxxx">
+          </div>
+        </div>
+      </div>
+
+      <div class="bk-section">
+        <h2 class="bk-section-title"><span class="step-dot">2</span> Stay Details</h2>
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">Check-in</label>
+            <input class="form-input" type="date" id="bkCheckIn">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Check-out</label>
+            <input class="form-input" type="date" id="bkCheckOut">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Guests</label>
+          <div class="guests-counter">
+            <button class="counter-btn" id="minusBtn">−</button>
+            <span class="counter-val" id="guestsVal">2</span>
+            <button class="counter-btn" id="plusBtn">+</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Special Requests (optional)</label>
+          <textarea class="form-input" id="specialReq" placeholder="Any special requirements? Early check-in, dietary needs…"></textarea>
+        </div>
+      </div>
+
+      <div class="policy-box">
+        <span class="icon">ℹ️</span>
+        <span>By confirming, you agree to our cancellation policy. Free cancellation is available up to 48 hours before check-in. Payment is collected on the next step.</span>
+      </div>
+    </div>
+
+    <!-- SUMMARY -->
+    <aside>
+      <div class="summary-card">
+        <img id="sumImg" src="" alt="">
+        <div class="summary-card-body">
+          <div class="summary-cat" id="sumCat"></div>
+          <div class="summary-name" id="sumName">Loading…</div>
+          <div class="summary-loc" id="sumLoc">📍 Egypt</div>
+
+          <div class="dates-pills">
+            <div class="date-pill"><div class="date-pill-lbl">Check In</div><div class="date-pill-val" id="dispIn">–</div></div>
+            <div class="date-pill"><div class="date-pill-lbl">Check Out</div><div class="date-pill-val" id="dispOut">–</div></div>
+          </div>
+
+          <div class="booking-summary">
+            <div class="summary-row"><span class="summary-label" id="sumNights">–</span><span class="summary-value" id="sumSub">–</span></div>
+            <div class="summary-row"><span class="summary-label">Service fee (10%)</span><span class="summary-value" id="sumFee">–</span></div>
+            <div class="summary-row"><span class="summary-label">Taxes (14%)</span><span class="summary-value" id="sumTax">–</span></div>
+            <div class="summary-row summary-total"><span class="summary-label">Total</span><span class="summary-value" id="sumTotal">–</span></div>
+          </div>
+
+          <button class="continue-btn" id="continueBtn">Continue to Payment →</button>
+          <a class="back-link" id="backLink" href="#">← Edit Booking</a>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script>
+(function(){
+  Nav.init();
+  if (!Auth.isLoggedIn()) { location.href='login.html'; return; }
+
+  const sid = getParam('service');
+  const svc = sid ? AppData.getServiceById(sid) : null;
+  if (!svc) { location.href='services.html'; return; }
+
+  const pending = JSON.parse(sessionStorage.getItem('egyptluxe_pending_booking')||'{}');
+  const village = AppData.getVillageById(svc.village);
+  const user = Auth.getUser();
+
+  // Pre-fill user info
+  if (user) {
+    const parts = (user.name||'').split(' ');
+    document.getElementById('firstName').value = parts[0]||'';
+    document.getElementById('lastName').value = parts.slice(1).join(' ')||'';
+    document.getElementById('guestEmail').value = user.email||'';
+  }
+
+  // Summary
+  document.getElementById('sumImg').src = svc.image;
+  document.getElementById('sumImg').alt = svc.name;
+  document.getElementById('sumCat').textContent = svc.category.toUpperCase();
+  document.getElementById('sumName').textContent = svc.name;
+  document.getElementById('sumLoc').textContent = '📍 ' + (village ? village.name : '') + ', Egypt';
+  document.getElementById('backLink').href = 'service-details.html?service=' + svc.id;
+
+  // Dates
+  const today = new Date();
+  const t1 = new Date(today); t1.setDate(today.getDate()+1);
+  const t2 = new Date(today); t2.setDate(today.getDate()+4);
+  document.getElementById('bkCheckIn').value = pending.checkIn || t1.toISOString().split('T')[0];
+  document.getElementById('bkCheckOut').value = pending.checkOut || t2.toISOString().split('T')[0];
+
+  let guests = parseInt(pending.guests)||2;
+  document.getElementById('guestsVal').textContent = guests;
+  document.getElementById('minusBtn').addEventListener('click', ()=>{ if(guests>1){ guests--; document.getElementById('guestsVal').textContent=guests; } });
+  document.getElementById('plusBtn').addEventListener('click', ()=>{ if(guests<20){ guests++; document.getElementById('guestsVal').textContent=guests; } });
+
+  function fmtD(d){ return new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); }
+
+  function updateSummary(){
+    const ci = document.getElementById('bkCheckIn').value;
+    const co = document.getElementById('bkCheckOut').value;
+    if (!ci||!co) return;
+    const nights = Math.max(1, Math.ceil((new Date(co)-new Date(ci))/86400000));
+    const sub = svc.price * nights;
+    const fee = sub * 0.10;
+    const tax = sub * 0.14;
+    const total = sub + fee + tax;
+    document.getElementById('dispIn').textContent = fmtD(ci);
+    document.getElementById('dispOut').textContent = fmtD(co);
+    document.getElementById('sumNights').textContent = `${formatPrice(svc.price)} × ${nights} nights`;
+    document.getElementById('sumSub').textContent = formatPrice(sub);
+    document.getElementById('sumFee').textContent = formatPrice(fee);
+    document.getElementById('sumTax').textContent = formatPrice(tax);
+    document.getElementById('sumTotal').textContent = formatPrice(total);
+  }
+
+  document.getElementById('bkCheckIn').addEventListener('change', updateSummary);
+  document.getElementById('bkCheckOut').addEventListener('change', updateSummary);
+  updateSummary();
+
+  document.getElementById('continueBtn').addEventListener('click', ()=>{
+    const fn = document.getElementById('firstName').value.trim();
+    const email = document.getElementById('guestEmail').value.trim();
+    const ci = document.getElementById('bkCheckIn').value;
+    const co = document.getElementById('bkCheckOut').value;
+    if (!fn) { Toast.show('Please enter your first name','warning'); return; }
+    if (!email) { Toast.show('Please enter your email','warning'); return; }
+    if (!ci||!co) { Toast.show('Please select dates','warning'); return; }
+    const nights = Math.ceil((new Date(co)-new Date(ci))/86400000);
+    if (nights < 1) { Toast.show('Invalid dates','warning'); return; }
+    const sub = svc.price * nights;
+    sessionStorage.setItem('egyptluxe_pending_booking', JSON.stringify({
+      serviceId: svc.id, serviceName: svc.name, serviceImage: svc.image,
+      category: svc.category, villageName: village ? village.name : '',
+      checkIn: ci, checkOut: co, nights, guests,
+      guestName: fn + ' ' + document.getElementById('lastName').value.trim(),
+      guestEmail: email, guestPhone: document.getElementById('guestPhone').value,
+      specialRequests: document.getElementById('specialReq').value,
+      pricePerNight: svc.price, subtotal: sub, fee: sub*0.10, tax: sub*0.14, total: sub+sub*0.10+sub*0.14
+    }));
+    location.href = `payment.html?service=${svc.id}`;
+  });
+})();
+</script>
+</body>
+</html>

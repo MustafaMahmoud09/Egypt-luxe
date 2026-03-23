@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Destinations – Egypt Luxe</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .villages-full-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.75rem; }
+    @media(max-width:900px){ .villages-full-grid { grid-template-columns: repeat(2,1fr); } }
+    @media(max-width:580px){ .villages-full-grid { grid-template-columns: 1fr; } }
+
+    .village-feature-card {
+      background: var(--white);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      border: 1px solid var(--border-light);
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+      cursor: pointer;
+    }
+    .village-feature-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+
+    .village-card-img {
+      width: 100%; height: 280px; object-fit: cover;
+      transition: var(--transition-slow);
+    }
+    .village-feature-card:hover .village-card-img { transform: scale(1.04); }
+
+    .village-card-img-wrap { overflow: hidden; position: relative; }
+
+    .village-info { padding: 1.75rem; }
+    .village-info-title { font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; margin-bottom: 0.25rem; }
+    .village-info-location { font-size: 0.82rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.35rem; margin-bottom: 0.75rem; }
+    .village-info-desc { font-size: 0.875rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 1.25rem; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .village-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.25rem; }
+    .village-footer { display: flex; justify-content: space-between; align-items: center; }
+
+    .category-pill {
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.4rem 0.875rem;
+      background: var(--gold-pale);
+      border-radius: 50px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--gold-dark);
+      border: 1px solid var(--gold-light);
+    }
+
+    .recommended-section {
+      background: linear-gradient(135deg, #0D0D0D 0%, #1A1A1A 100%);
+      padding: 4rem 0;
+      margin-top: 2rem;
+    }
+    .recommended-section .section-title { color: white; }
+    .recommended-section .section-subtitle { color: rgba(255,255,255,0.6); }
+    .recommended-section .section-eyebrow { color: var(--gold-light); }
+    .recommended-section .section-eyebrow::before,
+    .recommended-section .section-eyebrow::after { background: var(--gold-light); }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar solid dark-text">
+  <a href="index.html" class="nav-logo">
+    <div class="logo-icon">🌊</div>
+    Egypt<span>Luxe</span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="villages.html" class="nav-link">Destinations</a>
+    <a href="services.html" class="nav-link">Services</a>
+    <div class="nav-auth flex" id="nav-auth" style="display:flex!important;gap:0.5rem">
+      <a href="login.html" class="nav-btn outline nav-link">Login</a>
+      <a href="register.html" class="nav-btn gold">Register</a>
+    </div>
+    <div class="nav-user-area hidden flex" id="nav-user-area" style="gap:0.75rem;align-items:center">
+      <a href="profile.html" class="nav-link">Profile</a>
+      <div class="nav-avatar" onclick="window.location.href='profile.html'">U</div>
+      <button class="nav-btn outline nav-link logout-btn">Logout</button>
+    </div>
+  </div>
+  <button class="hamburger" style="color:var(--charcoal)"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="mobile-overlay"></div>
+<nav class="mobile-nav">
+  <div class="mobile-nav-header">
+    <div class="nav-logo" style="color:var(--charcoal)">🌊 Egypt<span>Luxe</span></div>
+    <div class="mobile-nav-close">✕</div>
+  </div>
+  <a href="index.html">🏠 Home</a>
+  <a href="villages.html">🗺 Destinations</a>
+  <a href="profile.html" class="mobile-user-link">👤 Profile</a>
+  <a href="#" class="mobile-user-link logout-btn">🚪 Logout</a>
+</nav>
+
+<!-- FLOW PROGRESS -->
+<div class="flow-progress">
+  <div class="container">
+    <div class="flow-steps">
+      <a href="index.html" class="flow-step done">
+        <span class="flow-step-num">✓</span> Home
+      </a>
+      <span class="flow-step-arrow">›</span>
+      <span class="flow-step active">
+        <span class="flow-step-num">2</span> Browse Villages
+      </span>
+      <span class="flow-step-arrow">›</span>
+      <span class="flow-step" style="opacity:0.45">
+        <span class="flow-step-num">3</span> Village Details
+      </span>
+      <span class="flow-step-arrow">›</span>
+      <span class="flow-step" style="opacity:0.45">
+        <span class="flow-step-num">4</span> View Services
+      </span>
+      <span class="flow-step-arrow">›</span>
+      <span class="flow-step" style="opacity:0.45">
+        <span class="flow-step-num">5</span> Service Details
+      </span>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="container">
+    <div class="page-header-content">
+      <div class="breadcrumb">
+        <a href="index.html">Home</a>
+        <span class="breadcrumb-sep">›</span>
+        <span>Destinations</span>
+      </div>
+      <div class="section-eyebrow" style="justify-content:flex-start">Explore Egypt</div>
+      <h1 class="section-title" style="text-align:left;font-size:2.5rem">Our Destinations</h1>
+      <p style="color:var(--text-muted);max-width:560px;line-height:1.7">Choose from three of Egypt's most breathtaking coastal destinations. Each offers a unique character, world-class amenities, and unforgettable experiences.</p>
+
+      <!-- Search bar -->
+      <div style="margin-top:1.5rem;max-width:480px;position:relative">
+        <span style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--text-light);pointer-events:none">🔍</span>
+        <input id="village-search" class="form-input" style="padding-left:2.75rem;border-radius:50px" placeholder="Search destinations...">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- VILLAGES GRID -->
+<section>
+  <div class="container">
+    <div class="villages-full-grid" id="villages-grid">
+      <!-- Rendered by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- RECOMMENDED SECTION -->
+<div class="recommended-section" id="recommended-section">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">Smart Picks</div>
+      <h2 class="section-title">Recommended For You</h2>
+      <p class="section-subtitle">Based on your travel preferences and booking history</p>
+    </div>
+    <div class="grid-4" id="recommended-grid"></div>
+  </div>
+</div>
+
+<!-- FOOTER MINI -->
+<div style="text-align:center;padding:2rem;background:var(--off-white);font-size:0.82rem;color:var(--text-muted);border-top:1px solid var(--border-light)">
+  © 2025 EgyptLuxe. Crafted with ♥ for Egypt's finest destinations.
+</div>
+
+<div id="toast-container"></div>
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // No auth required - villages page is publicly accessible
+
+  const user = Auth.getUser();
+  if (user) {
+    document.getElementById('nav-auth')?.classList.add('hidden');
+    const navUserArea = document.getElementById('nav-user-area');
+    if (navUserArea) {
+      navUserArea.classList.remove('hidden');
+      navUserArea.style.display = 'flex';
+      const avatar = navUserArea.querySelector('.nav-avatar');
+      if (avatar) avatar.textContent = user.name?.[0]?.toUpperCase() || 'U';
+    }
+  }
+
+  renderVillages(AppData.villages);
+
+  // Recommended
+  const bookings = Bookings.getAll();
+  const recommended = AppData.getRecommended(bookings);
+  const recGrid = document.getElementById('recommended-grid');
+  if (recGrid) {
+    recGrid.innerHTML = recommended.map(s => `
+      <div class="card" style="cursor:pointer" onclick="openService('${s.id}')">
+        <div class="card-image-wrapper">
+          <img class="card-image" src="${s.image}" alt="${s.name}" loading="lazy" style="height:180px">
+          <span class="card-badge">${s.tags?.[0] || s.category}</span>
+        </div>
+        <div class="card-body" style="padding:1.25rem">
+          <div class="card-rating" style="margin-bottom:0.4rem">
+            <span class="stars">${renderStars(s.rating)}</span>
+            <span>${s.rating}</span>
+          </div>
+          <h3 class="card-title" style="font-size:0.95rem;margin-bottom:0.25rem">${s.name}</h3>
+          <div class="card-price" style="font-size:1rem;margin-top:0.5rem">${formatPrice(s.price)} <span>/ ${s.unit}</span></div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Search
+  document.getElementById('village-search')?.addEventListener('input', (e) => {
+    const q = e.target.value.toLowerCase();
+    const filtered = AppData.villages.filter(v =>
+      v.name.toLowerCase().includes(q) ||
+      v.location.toLowerCase().includes(q) ||
+      v.tags?.some(t => t.toLowerCase().includes(q))
+    );
+    renderVillages(filtered);
+  });
+});
+
+function renderVillages(villages) {
+  const grid = document.getElementById('villages-grid');
+  if (!grid) return;
+
+  if (!villages.length) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="empty-state-icon">🔍</div><div class="empty-state-title">No destinations found</div><div class="empty-state-text">Try adjusting your search terms</div></div>`;
+    return;
+  }
+
+  grid.innerHTML = villages.map(v => {
+    const serviceCount = Object.values(AppData.services[v.id] || {}).reduce((a, b) => a + b.length, 0);
+    return `
+      <div class="village-feature-card" onclick="window.location.href='village-details.html?village=${v.id}'">
+        <div class="village-card-img-wrap">
+          <img class="village-card-img" src="${v.image}" alt="${v.name}" loading="lazy">
+          <div style="position:absolute;top:1rem;right:1rem;background:rgba(255,255,255,0.95);backdrop-filter:blur(10px);border-radius:50px;padding:0.3rem 0.85rem;font-size:0.8rem;font-weight:700;color:var(--gold-dark);display:flex;align-items:center;gap:0.3rem">⭐ ${v.rating}</div>
+          <div style="position:absolute;top:1rem;left:1rem;background:rgba(255,255,255,0.95);backdrop-filter:blur(10px);border-radius:50px;padding:0.3rem 0.85rem;font-size:0.75rem;font-weight:600;color:var(--text-muted)">${serviceCount} services</div>
+        </div>
+        <div class="village-info">
+          <h2 class="village-info-title">${v.name}</h2>
+          <div class="village-info-location">📍 ${v.location}</div>
+          <p class="village-info-desc">${v.description}</p>
+          <div class="village-tags">
+            ${v.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+          </div>
+          <div class="village-footer">
+            <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
+              ${AppData.categories.slice(0,3).map(c => `<span class="category-pill">${c.emoji} ${c.name}</span>`).join('')}
+            </div>
+            <button class="btn btn-primary btn-sm">Explore →</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+</script>
+</body>
+</html>
