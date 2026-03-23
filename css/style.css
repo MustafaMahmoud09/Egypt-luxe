@@ -1898,7 +1898,7 @@ section { padding: 5rem 0; }
   .grid-3 { grid-template-columns: repeat(2, 1fr); }
   .grid-2 { grid-template-columns: 1fr; }
   section { padding: 3.5rem 0; }
-  .hero-search { flex-direction: column; border-radius: var(--radius-lg); }
+  .hero-search { display: none;}
   .hero-search-divider { display: none; }
   .hero-search-btn { width: 100%; justify-content: center; }
   .hero-search-field { padding: 0.5rem; }
